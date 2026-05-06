@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mon Bar Privé</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#f5f0e8;--ivory2:#ede6d6;--ivory3:#e2d9c5;
+  --noir:#1a1510;--noir2:#241e17;--noir3:#2f271e;
+  --gold:#b8923a;--gold2:#d4aa55;
+  --gold-dim:rgba(184,146,58,.15);--gold-border:rgba(184,146,58,.35);
+  --red:#8b3a3a;--green:#3a6b4a;
+  --text:#1a1510;--text-mid:#5a4e3a;--text-muted:#9a8c78;
+  --tab-h:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Josefin Sans',sans-serif;background:var(--ivory);color:var(--text);min-height:100dvh;padding-bottom:var(--tab-h);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.6}
+.deco-line{display:flex;align-items:center;gap:10px;margin:8px 0}
+.deco-line::before,.deco-line::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent)}
+.deco-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+.header{position:sticky;top:0;z-index:50;background:var(--noir);padding:0 20px}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;border-bottom:1px solid var(--gold-border)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--gold2);line-height:1}
+.logo small{font-family:'Josefin Sans',sans-serif;font-style:normal;font-size:8px;letter-spacing:4px;color:var(--text-muted);display:block;text-transform:uppercase;margin-top:2px}
+.h-dots{display:flex;gap:4px}
+.h-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.5}
+.h-dot.on{opacity:1}
+.tabs-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;height:var(--tab-h);background:var(--noir);border-top:1px solid var(--gold-border);display:flex}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text-muted);font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding-bottom:4px;position:relative}
+.tab::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .25s cubic-bezier(.22,1,.36,1)}
+.tab.active{color:var(--gold2)}
+.tab.active::after{transform:scaleX(1)}
+.tab .ti{font-size:20px}
+.page{display:none;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.page-head{padding:20px 20px 0;background:var(--noir)}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-style:italic;color:var(--gold2)}
+.page-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px;margin-bottom:12px}
+.content{padding:16px 16px 20px;position:relative;z-index:1}
+.search-wrap{background:var(--noir);padding:0 20px 14px}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--noir3);border:1px solid var(--gold-border);padding:9px 14px}
+.search-box input{flex:1;background:none;border:none;outline:none;color:var(--ivory);font-family:'Josefin Sans',sans-serif;font-size:13px}
+.search-box input::placeholder{color:var(--text-muted)}
+.pills{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 0;background:var(--noir);scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;padding:5px 14px;border:1px solid var(--gold-border);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;background:transparent;font-family:'Josefin Sans',sans-serif}
+.pill.active{background:var(--gold);border-color:var(--gold);color:var(--noir);font-weight:600}
+.pills-spacer{height:12px;background:var(--noir)}
+.bottle-list{display:flex;flex-direction:column;gap:10px}
+.bottle-card{background:white;border:1px solid var(--ivory3);border-left:4px solid var(--gold);border-radius:4px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}
+.b-photo{width:100%;height:120px;object-fit:cover;display:block}
+.b-body{display:flex;align-items:center;gap:14px;padding:12px 14px}
+.b-emoji{font-size:32px;width:40px;text-align:center;flex-shrink:0}
+.b-info{flex:1;min-width:0}
+.b-name{font-family:'Cormorant Garamond',serif;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b-cat{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.b-right{text-align:right;flex-shrink:0}
+.b-qty{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:600}
+.b-qty-label{font-size:9px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase}
+.b-rating{display:flex;gap:1px;justify-content:flex-end;margin-top:4px}
+.star{font-size:10px;color:var(--ivory3)}
+.star.on{color:var(--gold)}
+.fab{position:fixed;right:18px;bottom:calc(var(--tab-h) + 14px);z-index:90;width:50px;height:50px;background:var(--noir);border:1px solid var(--gold);color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(184,146,58,.3);font-family:'Cormorant Garamond',serif}
+.fab:active{background:var(--gold);color:var(--noir)}
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,12,8,.78);display:none;align-items:flex-end;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--ivory);border-top:2px solid var(--gold);width:100%;max-height:92dvh;overflow-y:auto;padding:10px 20px 40px;animation:slideUp .35s cubic-bezier(.22,1,.36,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+.modal-handle{width:36px;height:3px;background:var(--ivory3);margin:0 auto 16px;border-radius:2px}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--noir);margin-bottom:4px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;display:block;font-weight:600}
+.form-input,.form-select,.form-textarea{width:100%;background:white;border:1px solid var(--ivory3);border-bottom:2px solid var(--ivory3);padding:10px 12px;color:var(--text);font-family:'Josefin Sans',sans-serif;font-size:14px;outline:none;appearance:none;border-radius:0}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-bottom-color:var(--gold)}
+.form-textarea{min-height:70px;resize:vertical}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+.star-input{display:flex;gap:6px;margin-top:4px}
+.star-inp{font-size:24px;cursor:pointer;color:var(--ivory3)}
+.star-inp.on{color:var(--gold)}
+.btn{width:100%;padding:13px;border:none;font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;margin-top:8px;border-radius:0}
+.btn-primary{background:var(--noir);color:var(--gold2)}
+.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(139,58,58,.3)}
+.btn-ghost{background:var(--ivory2);color:var(--text-muted)}
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty .e-icon{font-size:44px;margin-bottom:12px;opacity:.5}
+.empty p{font-size:12px;letter-spacing:1px}
+.detail-photo{width:calc(100% + 40px);margin-left:-20px;margin-top:-10px;max-height:220px;object-fit:cover;border-bottom:2px solid var(--gold-border);display:block;margin-bottom:12px}
+.detail-hero{text-align:center;padding-top:16px}
+.detail-emoji-big{font-size:60px}
+.detail-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic}
+.detail-cat{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:4px}
+.detail-stars{display:flex;gap:3px;justify-content:center;margin:10px 0}
+.detail-star{font-size:18px;color:var(--ivory3)}
+.detail-star.on{color:var(--gold)}
+.info-grid{background:white;border:1px solid var(--ivory3);padding:14px;margin:12px 0}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--ivory3)}
+.info-row:last-child{border:none}
+.info-key{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.info-val{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600}
+.qty-controls{display:flex;align-items:center;border:1px solid var(--ivory3);background:white;margin:12px 0}
+.qty-btn{flex:1;height:48px;font-size:24px;background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Cormorant Garamond',serif}
+.qty-val{padding:0 24px;font-family:'Cormorant Garamond',serif;font-size:28px;border-left:1px solid var(--ivory3);border-right:1px solid var(--ivory3)}
+.note-box{background:white;border:1px solid var(--ivory3);border-left:3px solid var(--gold);padding:12px 14px;font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--text-mid);line-height:1.6;margin:12px 0}
+.cocktail-card{background:white;border:1px solid var(--ivory3);border-radius:4px;padding:16px;margin-bottom:10px;cursor:pointer}
+.c-emoji{font-size:36px}
+.c-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic}
+.c-avail{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.avail-yes{color:var(--green)}.avail-no{color:var(--text-muted)}.avail-partial{color:var(--gold)}
+.c-ingredients{margin-top:12px;border-top:1px solid var(--ivory3);padding-top:10px;display:flex;flex-direction:column;gap:5px}
+.c-ing{display:flex;align-items:center;gap:8px;font-size:13px}
+.dot-ok{background:var(--green)}.dot-no{background:var(--ivory3)}
+.tasting-card{background:white;border:1px solid var(--ivory3);padding:16px;margin-bottom:10px;border-radius:4px;cursor:pointer}
+.t-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic}
+.t-date{font-size:10px;color:var(--text-muted);letter-spacing:1px}
+.t-star{font-size:13px;color:var(--ivory3)}
+.t-star.on{color:var(--gold)}
+.t-note{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--text-mid);line-height:1.6;margin-top:6px}
+.stock-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.s-stat{background:var(--noir);padding:14px 10px;text-align:center}
+.s-stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold2)}
+.s-stat-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.stock-item{background:white;border:1px solid var(--ivory3);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.si-emoji{font-size:24px;width:32px;text-align:center;flex-shrink:0}
+.si-info{flex:1;min-width:0}
+.si-name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-cat{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.si-controls{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.si-btn{width:30px;height:30px;border:1px solid var(--ivory3);background:none;color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif}
+.si-qty{font-family:'Cormorant Garamond',serif;font-size:20px;min-width:28px;text-align:center}
+.sec-head{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 10px;font-style:italic}
+
+/* Photo */
+.photo-zone{border:2px dashed var(--ivory3);background:white;display:flex;flex-direction:column;align-items:center;padding:18px 10px;gap:12px;position:relative}
+.photo-btns{display:flex;gap:10px;width:100%}
+.photo-btn{flex:1;position:relative;height:42px;border:1px solid var(--gold-border);background:var(--gold-dim);color:var(--text-mid);font-size:11px;letter-spacing:1px;font-family:'Josefin Sans',sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+.photo-btn input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0;margin:0;padding:0}
+.photo-preview-wrap{position:relative;width:100%}
+.photo-preview-wrap img{width:100%;max-height:180px;object-fit:cover;display:block}
+.photo-actions{display:flex;border-top:1px solid var(--gold-border)}
+.photo-change{flex:1;position:relative;height:38px;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:1px;color:var(--text-mid);background:var(--gold-dim);cursor:pointer;overflow:hidden}
+.photo-change input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.photo-del{width:38px;height:38px;background:var(--red);color:white;border:none;font-size:16px;cursor:pointer;flex-shrink:0}
+.ai-status{margin-top:8px;padding:9px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;display:none;align-items:center;gap:8px;border-left:3px solid var(--gold);background:var(--gold-dim);color:var(--text-mid)}
+
+/* Config */
+.cfg-banner{background:var(--noir2);border:1px solid var(--gold-border);padding:14px;margin-bottom:14px;font-size:12px;color:var(--text-muted);line-height:1.7;border-radius:2px}
+.cfg-banner strong{color:var(--gold2);display:block;margin-bottom:4px;font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.cfg-banner a{color:var(--gold);text-decoration:none}
+.cfg-input{width:100%;margin-top:8px;background:var(--noir3);border:1px solid var(--gold-border);padding:9px 10px;color:var(--ivory);font-family:'Josefin Sans',sans-serif;font-size:12px;outline:none;border-radius:0}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">Mon Bar Privé<small>Collection Personnelle</small></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onclick="openBackup()" style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:14px;width:32px;height:32px;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center" title="Sauvegarde">💾</button>
+      <button onclick="openSettings()" style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:14px;width:32px;height:32px;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center" title="Paramètres IA">⚙</button>
+      <div class="h-dots"><div class="h-dot"></div><div class="h-dot on"></div><div class="h-dot"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE BOUTEILLES -->
+<div class="page active" id="page-bottles">
+  <div class="page-head">
+    <div class="page-title">Bouteilles</div>
+    <div class="page-sub">Ma collection</div>
+    <div class="search-wrap" style="padding:0 0 14px">
+      <div class="search-box">
+        <span style="color:var(--text-muted);font-size:14px">◎</span>
+        <input type="text" id="b-search" placeholder="Rechercher…" oninput="renderBottles()">
+      </div>
+    </div>
+  </div>
+  <div class="pills" id="b-pills"></div>
+  <div class="pills-spacer"></div>
+  <div class="content"><div class="bottle-list" id="b-list"></div></div>
+</div>
+
+<!-- PAGE COCKTAILS -->
+<div class="page" id="page-cocktails">
+  <div class="page-head"><div class="page-title">Cocktails</div><div class="page-sub">Ce que je peux préparer</div></div>
+  <div class="content">
+    <!-- Bouton suggestion IA -->
+    <div style="margin-bottom:16px">
+      <button onclick="suggestCocktails()" id="suggest-btn"
+        style="width:100%;padding:14px;background:var(--noir);border:1px solid var(--gold);color:var(--gold2);
+        font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+        font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
+        ✦ Suggérer des cocktails avec mon stock
+      </button>
+      <div id="suggest-status" style="display:none;padding:9px 12px;font-size:11px;letter-spacing:1px;
+        text-transform:uppercase;border-left:3px solid var(--gold);background:var(--gold-dim);
+        color:var(--text-mid);align-items:center;gap:8px"></div>
+    </div>
+    <!-- Résultats IA -->
+    <div id="ai-cocktails"></div>
+    <!-- Cocktails manuels -->
+    <div id="c-list"></div>
+  </div>
+</div>
+
+<!-- PAGE DÉGUSTATION -->
+<div class="page" id="page-tasting">
+  <div class="page-head"><div class="page-title">Dégustation</div><div class="page-sub">Notes &amp; impressions</div></div>
+  <div class="content" id="t-list"></div>
+</div>
+
+<!-- PAGE STOCK -->
+<div class="page" id="page-stock">
+  <div class="page-head"><div class="page-title">Stock</div><div class="page-sub">Inventaire général</div></div>
+  <div class="content">
+    <div class="stock-summary" id="s-summary"></div>
+    <div class="sec-head">Toutes les bouteilles</div>
+    <div id="s-list"></div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tab active" onclick="switchTab('bottles',this)"><span class="ti">🍾</span>Bouteilles</div>
+  <div class="tab" onclick="switchTab('cocktails',this)"><span class="ti">🍸</span>Cocktails</div>
+  <div class="tab" onclick="switchTab('tasting',this)"><span class="ti">📝</span>Notes</div>
+  <div class="tab" onclick="switchTab('stock',this)"><span class="ti">📦</span>Stock</div>
+</div>
+
+<button class="fab" id="fab-btn">+</button>
+
+<!-- MODAL BOUTEILLE -->
+<div class="modal-overlay" id="bottle-modal" onclick="closeOnBg(event,'bottle-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="bm-title">Nouvelle bouteille</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <input type="hidden" id="bm-id">
+
+    <div id="cfg-section" class="cfg-banner">
+      <strong>⚙ Configuration IA — une seule fois</strong>
+      Colle ta clé API Google Gemini (gratuite) pour activer l'analyse automatique.<br>
+      Ou appuie sur ⚙ en haut à droite pour configurer.
+      <input class="cfg-input" type="password" id="cfg-apikey" placeholder="AIza..." oninput="saveConfig()">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Photo de la bouteille</label>
+      <div class="photo-zone" id="bm-photo-zone">
+        <div style="font-size:32px;opacity:.4">📷</div>
+        <div class="photo-btns">
+          <div class="photo-btn">
+            <input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event)">
+            📸 Appareil
+          </div>
+          <div class="photo-btn">
+            <input type="file" accept="image/*" onchange="handlePhoto(event)">
+            🖼 Galerie
+          </div>
+        </div>
+      </div>
+      <div class="ai-status" id="ai-status"></div>
+    </div>
+
+    <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="bm-name" placeholder="ex: Hendrick's Gin"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Catégorie</label>
+        <select class="form-select" id="bm-cat">
+          <option>Gin</option><option>Rhum</option><option>Whisky</option><option>Vodka</option>
+          <option>Cognac</option><option>Tequila</option><option>Liqueur</option><option>Vermouth</option>
+          <option>Bière</option><option>Vin</option><option>Champagne</option><option>Soft</option>
+          <option>Sirop</option><option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="bm-emoji" placeholder="🍾" maxlength="2"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Quantité</label><input class="form-input" id="bm-qty" type="number" min="0" placeholder="70"></div>
+      <div class="form-group"><label class="form-label">Unité</label>
+        <select class="form-select" id="bm-unit"><option>cl</option><option>ml</option><option>bouteille(s)</option><option>cannette(s)</option><option>dose(s)</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Degré (%)</label><input class="form-input" id="bm-abv" type="number" step="0.5" min="0" max="100" placeholder="40"></div>
+      <div class="form-group"><label class="form-label">Pays</label><input class="form-input" id="bm-origin" placeholder="France"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Ma note</label>
+      <div class="star-input" id="bm-stars">
+        <span class="star-inp" data-v="1">★</span><span class="star-inp" data-v="2">★</span>
+        <span class="star-inp" data-v="3">★</span><span class="star-inp" data-v="4">★</span><span class="star-inp" data-v="5">★</span>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes de dégustation</label>
+      <textarea class="form-textarea" id="bm-note" placeholder="Arômes, saveurs, impressions…"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveBottle()">Enregistrer</button>
+    <button class="btn btn-danger" id="bm-delete" style="display:none" onclick="deleteBottle()">Supprimer cette bouteille</button>
+    <button class="btn btn-ghost" onclick="closeModal('bottle-modal')">Annuler</button>
+  </div>
+</div>
+
+<!-- MODAL DÉTAIL -->
+<div class="modal-overlay" id="detail-modal" onclick="closeOnBg(event,'detail-modal')">
+  <div class="modal" id="detail-content"></div>
+</div>
+
+<!-- MODAL COCKTAIL -->
+<div class="modal-overlay" id="cocktail-modal" onclick="closeOnBg(event,'cocktail-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="cm-title">Nouveau cocktail</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <input type="hidden" id="cm-id">
+    <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="cm-name" placeholder="ex: Negroni"></div>
+    <div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="cm-emoji" placeholder="🍸" maxlength="2" style="width:80px"></div>
+    <div class="form-group"><label class="form-label">Ingrédients (un par ligne : Nom | quantité)</label>
+      <textarea class="form-textarea" id="cm-ings" placeholder="Gin | 4 cl&#10;Vermouth | 3 cl" style="min-height:90px"></textarea>
+    </div>
+    <div class="form-group"><label class="form-label">Préparation</label>
+      <textarea class="form-textarea" id="cm-prep" placeholder="Mélanger avec des glaçons…"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveCocktail()">Enregistrer</button>
+    <button class="btn btn-danger" id="cm-delete" style="display:none" onclick="deleteCocktail()">Supprimer</button>
+    <button class="btn btn-ghost" onclick="closeModal('cocktail-modal')">Annuler</button>
+  </div>
+</div>
+
+<!-- MODAL COCKTAIL DÉTAIL -->
+<div class="modal-overlay" id="cocktail-detail-modal" onclick="closeOnBg(event,'cocktail-detail-modal')">
+  <div class="modal" id="cocktail-detail-content"></div>
+</div>
+
+<!-- MODAL DÉGUSTATION -->
+<div class="modal-overlay" id="tasting-modal" onclick="closeOnBg(event,'tasting-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Note de dégustation</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <input type="hidden" id="tm-id">
+    <div class="form-group"><label class="form-label">Bouteille</label><select class="form-select" id="tm-bottle"></select></div>
+    <div class="form-group"><label class="form-label">Note</label>
+      <div class="star-input" id="tm-stars">
+        <span class="star-inp" data-v="1">★</span><span class="star-inp" data-v="2">★</span>
+        <span class="star-inp" data-v="3">★</span><span class="star-inp" data-v="4">★</span><span class="star-inp" data-v="5">★</span>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Impressions</label>
+      <textarea class="form-textarea" id="tm-note" placeholder="Arômes, saveurs, longueur en bouche…"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveTasting()">Enregistrer</button>
+    <button class="btn btn-danger" id="tm-delete" style="display:none" onclick="deleteTasting()">Supprimer</button>
+    <button class="btn btn-ghost" onclick="closeModal('tasting-modal')">Annuler</button>
+  </div>
+</div>
+
+<!-- MODAL SAUVEGARDE -->
+<div class="modal-overlay" id="backup-modal" onclick="closeOnBg(event,'backup-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Sauvegarde</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-bottom:16px">
+      Exporte ou restaure toutes tes données (bouteilles, cocktails, notes).
+    </div>
+    <!-- Stats -->
+    <div id="backup-info" style="background:var(--noir2);border:1px solid var(--gold-border);padding:12px 14px;font-size:12px;color:var(--text-muted);line-height:2;margin-bottom:14px"></div>
+    <!-- Export -->
+    <div style="background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:10px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-weight:600">📤 Exporter</div>
+      <div style="font-size:12px;color:var(--text-mid);margin-bottom:10px;line-height:1.6">Télécharge un fichier JSON avec toutes tes données.</div>
+      <button class="btn btn-primary" onclick="exportData()" style="margin-top:0">⬇ Télécharger la sauvegarde</button>
+    </div>
+    <!-- Import -->
+    <div style="background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:10px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-weight:600">📥 Importer</div>
+      <div style="font-size:12px;color:var(--text-mid);margin-bottom:10px;line-height:1.6">Restaure une sauvegarde. <strong style="color:var(--red)">Remplace toutes les données actuelles.</strong></div>
+      <div class="photo-btn" style="height:44px;border:1px solid var(--ivory3);background:var(--ivory2);color:var(--text-muted);font-size:12px;letter-spacing:1px">
+        <input type="file" accept=".json" onchange="importData(event)">
+        ⬆ Choisir un fichier .json
+      </div>
+    </div>
+    <div id="backup-status" style="display:none;padding:9px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px"></div>
+    <button class="btn btn-ghost" onclick="closeModal('backup-modal')">Fermer</button>
+  </div>
+</div>
+
+<script>
+const LS={B:'bar_bottles_v1',C:'bar_cocktails_v1',T:'bar_tastings_v1'};
+let CFG={apikey:''};
+let bottles=[],cocktails=[],tastings=[];
+const CATS=['Gin','Rhum','Whisky','Vodka','Cognac','Tequila','Liqueur','Vermouth','Bière','Vin','Champagne','Soft','Sirop','Autre'];
+const CAT_EMOJI={Gin:'🌿',Rhum:'🍬',Whisky:'🥃',Vodka:'❄️',Cognac:'🍂',Tequila:'🌵',Liqueur:'🍯',Vermouth:'🍷',Bière:'🍺',Vin:'🍷',Champagne:'🥂',Soft:'💧',Sirop:'🫙',Autre:'🍶'};
+
+// ── Sauvegarde ────────────────────────────────────────
+function openBackup(){
+  const el=document.getElementById('backup-info');
+  const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  el.innerHTML=`
+    🍾 <strong style="color:var(--gold2)">${bottles.length}</strong> bouteille${bottles.length>1?'s':''}<br>
+    🍸 <strong style="color:var(--gold2)">${cocktails.length}</strong> cocktail${cocktails.length>1?'s':''}<br>
+    📝 <strong style="color:var(--gold2)">${tastings.length}</strong> note${tastings.length>1?'s'  :''} de dégustation<br>
+    🕐 Dernière mise à jour : ${date}`;
+  document.getElementById('backup-status').style.display='none';
+  openModal('backup-modal');
+}
+
+function exportData(){
+  const data={
+    version:1,
+    date:new Date().toISOString(),
+    bottles, cocktails, tastings
+  };
+  const json=JSON.stringify(data,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const dateStr=new Date().toISOString().slice(0,10);
+  a.href=url;
+  a.download=`monbar-sauvegarde-${dateStr}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showBackupStatus('Sauvegarde téléchargée !','ok');
+}
+
+function importData(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.bottles||!data.cocktails) throw new Error('Fichier invalide');
+      if(!confirm(`Importer ${data.bottles.length} bouteilles, ${data.cocktails.length} cocktails et ${(data.tastings||[]).length} notes ?\n\nCela remplacera toutes tes données actuelles.`)) return;
+      bottles  = data.bottles  || [];
+      cocktails= data.cocktails|| [];
+      tastings = data.tastings || [];
+      saveB(); saveC(); saveT();
+      renderBottles();
+      showBackupStatus(`Import réussi — ${bottles.length} bouteilles restaurées !`,'ok');
+    }catch(err){
+      showBackupStatus('Erreur : fichier invalide','error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showBackupStatus(msg,type){
+  const el=document.getElementById('backup-status');
+  el.style.display='block';
+  el.style.borderLeft=`3px solid ${type==='ok'?'var(--green)':'var(--red)'}`;
+  el.style.background=type==='ok'?'rgba(58,107,74,.1)':'rgba(139,58,58,.1)';
+  el.style.color=type==='ok'?'var(--green)':'var(--red)';
+  el.textContent=(type==='ok'?'✦ ':'✕ ')+msg;
+}
+
+
+function loadConfig(){
+  try{ CFG=JSON.parse(localStorage.getItem('bar_cfg2'))||{apikey:''}; }catch{ CFG={apikey:''}; }
+  const el=document.getElementById('cfg-apikey');
+  if(el) el.value=CFG.apikey||'';
+  document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
+}
+function saveConfig(){
+  CFG.apikey=document.getElementById('cfg-apikey').value.trim();
+  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
+  document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
+}
+
+// ── Data ──────────────────────────────────────────────
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function load(){
+  try{bottles=JSON.parse(localStorage.getItem(LS.B))||[];}catch{bottles=[];}
+  try{cocktails=JSON.parse(localStorage.getItem(LS.C))||[];}catch{cocktails=[];}
+  try{tastings=JSON.parse(localStorage.getItem(LS.T))||[];}catch{tastings=[];}
+  if(!bottles.length)   seedBottles();
+  if(!cocktails.length) seedCocktails();
+}
+function saveB(){localStorage.setItem(LS.B,JSON.stringify(bottles));}
+function saveC(){localStorage.setItem(LS.C,JSON.stringify(cocktails));}
+function saveT(){localStorage.setItem(LS.T,JSON.stringify(tastings));}
+
+function seedBottles(){
+  bottles=[
+    {id:uid(),name:"Hendrick's Gin",cat:'Gin',emoji:'🌿',qty:70,unit:'cl',abv:41.4,origin:'Écosse',stars:5,note:'Floral et concombre',photo:null},
+    {id:uid(),name:'Bacardi Carta Blanca',cat:'Rhum',emoji:'🍬',qty:1,unit:'bouteille(s)',abv:37.5,origin:'Porto Rico',stars:3,note:'Léger, idéal cocktails',photo:null},
+    {id:uid(),name:'Martini Rosso',cat:'Vermouth',emoji:'🍷',qty:50,unit:'cl',abv:15,origin:'Italie',stars:4,note:'Herbacé et sucré',photo:null},
+    {id:uid(),name:'Campari',cat:'Liqueur',emoji:'🔴',qty:1,unit:'bouteille(s)',abv:25,origin:'Italie',stars:4,note:"Amer, notes d'orange",photo:null},
+    {id:uid(),name:'Cointreau',cat:'Liqueur',emoji:'🍊',qty:30,unit:'cl',abv:40,origin:'France',stars:4,note:'Orange délicate',photo:null},
+  ]; saveB();
+}
+function seedCocktails(){
+  cocktails=[
+    {id:uid(),name:'Negroni',emoji:'🍊',ingredients:[{name:'Gin',qty:'3 cl'},{name:'Campari',qty:'3 cl'},{name:'Vermouth',qty:'3 cl'}],prep:"Mélanger avec glaçons. Zeste d'orange."},
+    {id:uid(),name:'Mojito',emoji:'🌿',ingredients:[{name:'Rhum',qty:'5 cl'},{name:'Citron vert',qty:'2 cl'},{name:'Sirop de canne',qty:'2 cl'},{name:'Menthe',qty:'quelques feuilles'}],prep:"Piler la menthe. Rhum et glace pilée. Eau gazeuse."},
+    {id:uid(),name:'Gin Tonic',emoji:'🫧',ingredients:[{name:'Gin',qty:'5 cl'},{name:'Tonic',qty:'15 cl'}],prep:"Grand verre, glaçons, gin, tonic. Quartier citron vert."},
+  ]; saveC();
+}
+
+// ── Tabs ──────────────────────────────────────────────
+let currentTab='bottles';
+function switchTab(name,el){
+  currentTab=name;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('fab-btn').style.display=name==='stock'?'none':'flex';
+  if(name==='bottles')   renderBottles();
+  if(name==='cocktails') renderCocktails();
+  if(name==='tasting')   renderTasting();
+  if(name==='stock')     renderStock();
+}
+document.getElementById('fab-btn').addEventListener('click',()=>{
+  if(currentTab==='bottles')   openBottleModal();
+  if(currentTab==='cocktails') openCocktailModal();
+  if(currentTab==='tasting')   openTastingModal();
+});
+
+// ── Modal utils ───────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeOnBg(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+
+// ── Star input ────────────────────────────────────────
+function initStarInput(cid){
+  const el=document.getElementById(cid); let val=0;
+  el.querySelectorAll('.star-inp').forEach(s=>{
+    s.addEventListener('click',()=>{ val=parseInt(s.dataset.v); updateStars(el,val); });
+  });
+  el._getVal=()=>val;
+  el._setVal=(v)=>{ val=v; updateStars(el,v); };
+}
+function updateStars(el,val){
+  el.querySelectorAll('.star-inp').forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=val));
+}
+
+// ── Photo + IA ────────────────────────────────────────
+let _photo=null, _spinT=null;
+
+function handlePhoto(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement('canvas');
+      const MAX=800; let w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      const dataUrl=c.toDataURL('image/jpeg',.72);
+      _photo=dataUrl;
+      showPreview(dataUrl);
+      if(!document.getElementById('bm-name').value.trim() && CFG.apikey){
+        analyzePhoto(dataUrl);
+      }
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function showPreview(dataUrl){
+  document.getElementById('bm-photo-zone').innerHTML=`
+    <div class="photo-preview-wrap">
+      <img src="${dataUrl}">
+      <div class="photo-actions">
+        <div class="photo-change">
+          <input type="file" accept="image/*" onchange="handlePhoto(event)">
+          🖼 Changer la photo
+        </div>
+        <button class="photo-del" onclick="clearPhoto()">✕</button>
+      </div>
+    </div>`;
+}
+
+function clearPhoto(){
+  _photo=null;
+  document.getElementById('bm-photo-zone').innerHTML=`
+    <div style="font-size:32px;opacity:.4">📷</div>
+    <div class="photo-btns">
+      <div class="photo-btn"><input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event)">📸 Appareil</div>
+      <div class="photo-btn"><input type="file" accept="image/*" onchange="handlePhoto(event)">🖼 Galerie</div>
+    </div>`;
+}
+
+function setAiStatus(msg,type){
+  const el=document.getElementById('ai-status');
+  clearInterval(_spinT);
+  el.style.display='flex';
+  el.style.flexDirection='column';
+  el.style.alignItems='flex-start';
+  if(type==='loading'){
+    const dots=['◌','◎','●','◎']; let i=0;
+    el.innerHTML=`<span id="spin-dot">◌</span>&nbsp;${msg}`;
+    _spinT=setInterval(()=>{ const s=document.getElementById('spin-dot'); if(s)s.textContent=dots[i++%4]; },250);
+  } else if(type==='ok'){
+    el.style.borderLeftColor='var(--green)';
+    el.style.background='rgba(58,107,74,.1)';
+    el.innerHTML='✦ '+msg;
+    setTimeout(()=>{ el.style.display='none'; el.style.borderLeftColor='var(--gold)'; el.style.background='var(--gold-dim)'; },3000);
+  } else {
+    // error — affiche le message complet, reste affiché
+    el.style.borderLeftColor='var(--red)';
+    el.style.background='rgba(139,58,58,.1)';
+    el.style.color='var(--red)';
+    el.innerHTML='✕ '+msg+'<br><small style="font-size:9px;opacity:.7;margin-top:4px;word-break:break-all">Ouvre la console (F12) pour plus de détails</small>';
+  }
+}
+
+// analyzePhoto définie dans le bloc settings ci-dessous
+
+// ── Bottles ───────────────────────────────────────────
+let bActiveCat='Tous';
+function renderBottles(){
+  const q=document.getElementById('b-search').value.toLowerCase();
+  const cats=['Tous',...new Set(bottles.map(b=>b.cat))];
+  document.getElementById('b-pills').innerHTML=cats.map(c=>
+    `<div class="pill ${c===bActiveCat?'active':''}" onclick="setBCat('${c}')">${c}</div>`
+  ).join('');
+  const list=bottles.filter(b=>(bActiveCat==='Tous'||b.cat===bActiveCat)&&(!q||b.name.toLowerCase().includes(q)||b.cat.toLowerCase().includes(q)));
+  const el=document.getElementById('b-list');
+  if(!list.length){el.innerHTML=`<div class="empty"><div class="e-icon">🍾</div><p>Aucune bouteille</p></div>`;return;}
+  el.innerHTML=list.map(b=>{
+    const em=b.emoji||CAT_EMOJI[b.cat]||'🍶';
+    const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=(b.stars||0)?'on':''}">★</span>`).join('');
+    return`<div class="bottle-card" onclick="openBottleDetail('${b.id}')">
+      ${b.photo?`<img class="b-photo" src="${b.photo}" alt="">`:''}
+      <div class="b-body">
+        <div class="b-emoji">${em}</div>
+        <div class="b-info"><div class="b-name">${b.name}</div><div class="b-cat">${b.cat}${b.origin?' · '+b.origin:''}</div></div>
+        <div class="b-right"><div class="b-qty">${b.qty}</div><div class="b-qty-label">${b.unit}</div><div class="b-rating">${stars}</div></div>
+      </div></div>`;
+  }).join('');
+}
+function setBCat(c){bActiveCat=c;renderBottles();}
+
+function openBottleModal(id){
+  resetBottleForm();
+  document.getElementById('bm-title').textContent=id?'Modifier':'Nouvelle bouteille';
+  document.getElementById('bm-delete').style.display=id?'block':'none';
+  document.getElementById('cfg-section').style.display=(CFG.imgbb&&CFG.webhook)?'none':'block';
+  document.getElementById('ai-status').style.display='none';
+  if(id){
+    const b=bottles.find(x=>x.id===id);
+    document.getElementById('bm-id').value=id;
+    document.getElementById('bm-name').value=b.name;
+    document.getElementById('bm-cat').value=b.cat;
+    document.getElementById('bm-emoji').value=b.emoji||'';
+    document.getElementById('bm-qty').value=b.qty;
+    document.getElementById('bm-unit').value=b.unit;
+    document.getElementById('bm-abv').value=b.abv||'';
+    document.getElementById('bm-origin').value=b.origin||'';
+    document.getElementById('bm-note').value=b.note||'';
+    document.getElementById('bm-stars')._setVal(b.stars||0);
+    if(b.photo){_photo=b.photo;showPreview(b.photo);}
+  }
+  openModal('bottle-modal');
+}
+function resetBottleForm(){
+  ['bm-id','bm-name','bm-emoji','bm-qty','bm-abv','bm-origin','bm-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bm-cat').value='Gin';
+  document.getElementById('bm-unit').value='cl';
+  document.getElementById('bm-stars')._setVal(0);
+  _photo=null; clearPhoto();
+}
+function saveBottle(){
+  const name=document.getElementById('bm-name').value.trim(); if(!name){document.getElementById('bm-name').focus();return;}
+  const id=document.getElementById('bm-id').value;
+  const existPhoto=id?(bottles.find(x=>x.id===id)||{}).photo:null;
+  const obj={id:id||uid(),name,
+    cat:document.getElementById('bm-cat').value,
+    emoji:document.getElementById('bm-emoji').value.trim(),
+    qty:parseFloat(document.getElementById('bm-qty').value)||0,
+    unit:document.getElementById('bm-unit').value,
+    abv:parseFloat(document.getElementById('bm-abv').value)||0,
+    origin:document.getElementById('bm-origin').value.trim(),
+    stars:document.getElementById('bm-stars')._getVal(),
+    note:document.getElementById('bm-note').value.trim(),
+    photo:_photo!==null?_photo:existPhoto};
+  if(id){const i=bottles.findIndex(x=>x.id===id);if(i>=0)bottles[i]=obj;}else bottles.push(obj);
+  saveB();closeModal('bottle-modal');renderBottles();
+}
+function deleteBottle(){
+  bottles=bottles.filter(x=>x.id!==document.getElementById('bm-id').value);
+  saveB();closeModal('bottle-modal');renderBottles();
+}
+function openBottleDetail(id){
+  const b=bottles.find(x=>x.id===id); if(!b)return;
+  const em=b.emoji||CAT_EMOJI[b.cat]||'🍶';
+  const stars=[1,2,3,4,5].map(i=>`<span class="detail-star ${i<=(b.stars||0)?'on':''}">★</span>`).join('');
+  document.getElementById('detail-content').innerHTML=`
+    <div class="modal-handle"></div>
+    ${b.photo?`<img class="detail-photo" src="${b.photo}" alt="">`:''}
+    <div class="detail-hero" style="${b.photo?'padding-top:14px':''}">
+      ${!b.photo?`<div class="detail-emoji-big">${em}</div>`:''}
+      <div class="detail-name">${b.name}</div>
+      <div class="detail-cat">${b.cat}${b.origin?' · '+b.origin:''}</div>
+      <div class="detail-stars">${stars}</div>
+    </div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div class="info-grid">
+      <div class="info-row"><span class="info-key">Quantité</span><span class="info-val">${b.qty} ${b.unit}</span></div>
+      ${b.abv?`<div class="info-row"><span class="info-key">Alcool</span><span class="info-val">${b.abv}%</span></div>`:''}
+    </div>
+    <div class="qty-controls">
+      <button class="qty-btn" onclick="adjB('${b.id}',-1)">−</button>
+      <div class="qty-val" id="det-qty">${b.qty}</div>
+      <button class="qty-btn" onclick="adjB('${b.id}',+1)">+</button>
+    </div>
+    ${b.note?`<div class="note-box">${b.note}</div>`:''}
+    <button class="btn btn-primary" onclick="closeModal('detail-modal');openBottleModal('${b.id}')">✏ Modifier</button>
+    <button class="btn btn-ghost" onclick="closeModal('detail-modal')">Fermer</button>`;
+  openModal('detail-modal');
+}
+function adjB(id,d){
+  const b=bottles.find(x=>x.id===id); if(!b)return;
+  b.qty=Math.max(0,b.qty+d); saveB();
+  const el=document.getElementById('det-qty'); if(el)el.textContent=b.qty;
+  renderBottles();
+}
+
+// ── Cocktails ─────────────────────────────────────────
+function hasIng(name){
+  const n=name.toLowerCase();
+  return bottles.some(b=>b.name.toLowerCase().includes(n)||b.cat.toLowerCase().includes(n)||n.includes(b.cat.toLowerCase())||n.includes(b.name.toLowerCase().split(' ')[0]));
+}
+function renderCocktails(){
+  const el=document.getElementById('c-list');
+  if(!cocktails.length){el.innerHTML=`<div class="empty"><div class="e-icon">🍸</div><p>Aucun cocktail</p></div>`;return;}
+  el.innerHTML=cocktails.map(c=>{
+    const h=c.ingredients.map(i=>hasIng(i.name));
+    const all=h.every(Boolean),some=h.some(Boolean);
+    return`<div class="cocktail-card" onclick="openCocktailDetail('${c.id}')">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="c-emoji">${c.emoji||'🍸'}</div>
+        <div><div class="c-title">${c.name}</div>
+          <div class="c-avail ${all?'avail-yes':some?'avail-partial':'avail-no'}">${all?'Prêt à préparer':some?'Partiellement disponible':'Ingrédients manquants'}</div>
+        </div>
+      </div>
+      <div class="c-ingredients">${c.ingredients.map((ing,i)=>`<div class="c-ing">
+        <div style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:${hasIng(ing.name)?'var(--green)':'var(--ivory3)'}"></div>
+        <span style="flex:1">${ing.name}</span><span style="font-size:11px;color:var(--text-muted)">${ing.qty}${hasIng(ing.name)?' ✓':''}</span>
+      </div>`).join('')}</div></div>`;
+  }).join('');
+}
+function openCocktailDetail(id){
+  const c=cocktails.find(x=>x.id===id); if(!c)return;
+  document.getElementById('cocktail-detail-content').innerHTML=`
+    <div class="modal-handle"></div>
+    <div class="detail-hero"><div class="detail-emoji-big">${c.emoji||'🍸'}</div><div class="detail-name">${c.name}</div></div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div class="sec-head">Ingrédients</div>
+    <div class="info-grid">${c.ingredients.map(i=>`<div class="info-row">
+      <span style="display:flex;align-items:center;gap:8px">
+        <span style="width:6px;height:6px;border-radius:50%;background:${hasIng(i.name)?'var(--green)':'var(--ivory3)'};flex-shrink:0;display:inline-block"></span>${i.name}
+      </span><span class="info-val">${i.qty}</span></div>`).join('')}</div>
+    ${c.prep?`<div class="sec-head">Préparation</div><div class="note-box">${c.prep}</div>`:''}
+    <button class="btn btn-primary" onclick="closeModal('cocktail-detail-modal');openCocktailModal('${c.id}')">✏ Modifier</button>
+    <button class="btn btn-ghost" onclick="closeModal('cocktail-detail-modal')">Fermer</button>`;
+  openModal('cocktail-detail-modal');
+}
+function openCocktailModal(id){
+  ['cm-id','cm-name','cm-emoji','cm-ings','cm-prep'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('cm-delete').style.display='none';
+  document.getElementById('cm-title').textContent='Nouveau cocktail';
+  if(id){
+    const c=cocktails.find(x=>x.id===id);
+    document.getElementById('cm-id').value=id;
+    document.getElementById('cm-name').value=c.name;
+    document.getElementById('cm-emoji').value=c.emoji||'';
+    document.getElementById('cm-ings').value=c.ingredients.map(i=>`${i.name} | ${i.qty}`).join('\n');
+    document.getElementById('cm-prep').value=c.prep||'';
+    document.getElementById('cm-delete').style.display='block';
+    document.getElementById('cm-title').textContent='Modifier';
+  }
+  openModal('cocktail-modal');
+}
+function saveCocktail(){
+  const name=document.getElementById('cm-name').value.trim(); if(!name)return;
+  const ings=document.getElementById('cm-ings').value.trim().split('\n').filter(Boolean).map(l=>{const[n,q]=l.split('|').map(s=>s.trim());return{name:n||l,qty:q||''};});
+  const id=document.getElementById('cm-id').value;
+  const obj={id:id||uid(),name,emoji:document.getElementById('cm-emoji').value.trim(),ingredients:ings,prep:document.getElementById('cm-prep').value.trim()};
+  if(id){const i=cocktails.findIndex(x=>x.id===id);if(i>=0)cocktails[i]=obj;}else cocktails.push(obj);
+  saveC();closeModal('cocktail-modal');renderCocktails();
+}
+function deleteCocktail(){
+  cocktails=cocktails.filter(x=>x.id!==document.getElementById('cm-id').value);
+  saveC();closeModal('cocktail-modal');renderCocktails();
+}
+
+// ── Dégustation ───────────────────────────────────────
+function renderTasting(){
+  const el=document.getElementById('t-list');
+  if(!tastings.length){el.innerHTML=`<div class="empty"><div class="e-icon">📝</div><p>Aucune note</p></div>`;return;}
+  el.innerHTML=[...tastings].reverse().map(t=>{
+    const stars=[1,2,3,4,5].map(i=>`<span class="t-star ${i<=(t.stars||0)?'on':''}">★</span>`).join('');
+    const d=new Date(t.date).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+    return`<div class="tasting-card" onclick="openTastingModal('${t.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="t-name">${t.bottleName}</div><div style="display:flex;gap:2px;margin:6px 0">${stars}</div></div>
+        <div class="t-date">${d}</div>
+      </div>
+      ${t.note?`<div class="t-note">${t.note}</div>`:''}
+    </div>`;
+  }).join('');
+}
+function openTastingModal(id){
+  ['tm-id','tm-note'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('tm-stars')._setVal(0);
+  document.getElementById('tm-delete').style.display='none';
+  document.getElementById('tm-bottle').innerHTML=bottles.map(b=>`<option value="${b.id}">${b.name}</option>`).join('');
+  if(id){
+    const t=tastings.find(x=>x.id===id);
+    document.getElementById('tm-id').value=id;
+    document.getElementById('tm-bottle').value=t.bottleId||'';
+    document.getElementById('tm-stars')._setVal(t.stars||0);
+    document.getElementById('tm-note').value=t.note||'';
+    document.getElementById('tm-delete').style.display='block';
+  }
+  openModal('tasting-modal');
+}
+function saveTasting(){
+  const bottleId=document.getElementById('tm-bottle').value;
+  const bottle=bottles.find(x=>x.id===bottleId);
+  const id=document.getElementById('tm-id').value;
+  const obj={id:id||uid(),bottleId,bottleName:bottle?bottle.name:'?',
+    stars:document.getElementById('tm-stars')._getVal(),
+    note:document.getElementById('tm-note').value.trim(),
+    date:id?(tastings.find(x=>x.id===id)||{}).date||Date.now():Date.now()};
+  if(id){const i=tastings.findIndex(x=>x.id===id);if(i>=0)tastings[i]=obj;}else tastings.push(obj);
+  saveT();closeModal('tasting-modal');renderTasting();
+}
+function deleteTasting(){
+  tastings=tastings.filter(x=>x.id!==document.getElementById('tm-id').value);
+  saveT();closeModal('tasting-modal');renderTasting();
+}
+
+// ── Stock ─────────────────────────────────────────────
+function renderStock(){
+  document.getElementById('s-summary').innerHTML=`
+    <div class="s-stat"><div class="s-stat-val">${bottles.length}</div><div class="s-stat-label">Bouteilles</div></div>
+    <div class="s-stat"><div class="s-stat-val">${bottles.reduce((s,b)=>s+(b.qty||0),0)}</div><div class="s-stat-label">Total unités</div></div>
+    <div class="s-stat"><div class="s-stat-val">${new Set(bottles.map(b=>b.cat)).size}</div><div class="s-stat-label">Catégories</div></div>`;
+  document.getElementById('s-list').innerHTML=[...bottles].sort((a,b)=>(a.qty||0)-(b.qty||0)).map(b=>`
+    <div class="stock-item">
+      <div class="si-emoji">${b.emoji||CAT_EMOJI[b.cat]||'🍶'}</div>
+      <div class="si-info"><div class="si-name">${b.name}</div><div class="si-cat">${b.cat}</div></div>
+      <div class="si-controls">
+        <button class="si-btn" onclick="adjStk('${b.id}',-1)">−</button>
+        <div class="si-qty" id="sq-${b.id}">${b.qty}</div>
+        <button class="si-btn" onclick="adjStk('${b.id}',+1)">+</button>
+      </div></div>`).join('');
+}
+function adjStk(id,d){
+  const b=bottles.find(x=>x.id===id); if(!b)return;
+  b.qty=Math.max(0,b.qty+d); saveB();
+  const el=document.getElementById('sq-'+id); if(el)el.textContent=b.qty;
+  renderStock();
+}
+
+// ── Init ──────────────────────────────────────────────
+load();
+loadConfig();
+initStarInput('bm-stars');
+initStarInput('tm-stars');
+renderBottles();
+</script>
+<!-- MODAL RECETTE IA -->
+<div class="modal-overlay" id="ai-recipe-modal" onclick="closeOnBg(event,'ai-recipe-modal')">
+  <div class="modal" id="ai-recipe-content"></div>
+</div>
+
+
+<div class="modal-overlay" id="settings-modal" onclick="closeOnBg(event,'settings-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Paramètres IA</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.9;margin-bottom:16px">
+      Clé <strong style="color:var(--gold2)">100% gratuite</strong> — Google Gemini :<br>
+      1. Va sur <a href="https://aistudio.google.com" target="_blank" style="color:var(--gold)">aistudio.google.com</a><br>
+      2. Connecte-toi avec ton compte Google<br>
+      3. Clique <strong>Get API Key → Create API Key</strong><br>
+      4. Copie et colle ci-dessous 👇
+    </div>
+    <div class="form-group">
+      <label class="form-label">Clé API Google Gemini</label>
+      <input class="form-input" id="s-apikey" placeholder="AIza..." type="password" autocomplete="off">
+    </div>
+    <div id="s-status" style="display:none;padding:9px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-left:3px solid var(--green);background:rgba(58,107,74,.1);color:var(--green);margin-bottom:8px">✦ Clé sauvegardée</div>
+    <button class="btn btn-primary" onclick="saveSettings()">💾 Enregistrer</button>
+    <button class="btn btn-danger" onclick="clearSettings()">Effacer la clé</button>
+    <button class="btn btn-ghost" onclick="listModels()" style="margin-top:6px">🔍 Voir les modèles disponibles</button>
+    <div id="models-list" style="display:none;margin-top:10px;font-size:11px;color:var(--text-muted);background:var(--noir3);padding:10px;line-height:1.8;word-break:break-all"></div>
+    <button class="btn btn-ghost" onclick="closeModal('settings-modal')">Fermer</button>
+  </div>
+</div>
+
+<script>
+async function listModels(){
+  const key=document.getElementById('s-apikey').value.trim()||CFG.apikey;
+  const el=document.getElementById('models-list');
+  el.style.display='block';
+  el.textContent='Chargement…';
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+    const data=await res.json();
+    if(!res.ok) throw new Error(data?.error?.message||res.status);
+    const vision=data.models
+      .filter(m=>m.supportedGenerationMethods?.includes('generateContent'))
+      .map(m=>m.name.replace('models/',''));
+    el.innerHTML='<strong style="color:var(--gold2)">Modèles disponibles :</strong><br>'+vision.join('<br>');
+  }catch(e){
+    el.textContent='Erreur : '+e.message;
+  }
+}
+function openSettings(){
+  document.getElementById('s-apikey').value=CFG.apikey||'';
+  document.getElementById('s-status').style.display='none';
+  openModal('settings-modal');
+}
+function saveSettings(){
+  CFG.apikey=document.getElementById('s-apikey').value.trim();
+  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
+  const el=document.getElementById('cfg-apikey'); if(el) el.value=CFG.apikey;
+  document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
+  const st=document.getElementById('s-status');
+  st.style.display='block';
+  setTimeout(()=>st.style.display='none',2500);
+}
+function clearSettings(){
+  CFG={apikey:''};
+  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
+  document.getElementById('s-apikey').value='';
+  const el=document.getElementById('cfg-apikey'); if(el) el.value='';
+  document.getElementById('cfg-section').style.display='block';
+  closeModal('settings-modal');
+}
+
+// ── Suggestions cocktails IA ──────────────────────────
+let _suggestSpinT=null;
+function setSuggestStatus(msg,type){
+  const el=document.getElementById('suggest-status');
+  clearInterval(_suggestSpinT);
+  el.style.display='flex';
+  if(type==='loading'){
+    const dots=['◌','◎','●','◎'];let i=0;
+    el.innerHTML=`<span id="sug-spin">◌</span>&nbsp;${msg}`;
+    _suggestSpinT=setInterval(()=>{const s=document.getElementById('sug-spin');if(s)s.textContent=dots[i++%4];},250);
+  } else if(type==='ok'){
+    el.style.borderLeftColor='var(--green)';el.style.background='rgba(58,107,74,.1)';el.style.color='var(--green)';
+    el.innerHTML='✦ '+msg;
+    setTimeout(()=>{el.style.display='none';el.style.borderLeftColor='var(--gold)';el.style.background='var(--gold-dim)';el.style.color='var(--text-mid)';},3000);
+  } else {
+    el.style.borderLeftColor='var(--red)';el.style.background='rgba(139,58,58,.1)';el.style.color='var(--red)';
+    el.innerHTML='✕ '+msg;
+  }
+}
+
+let _excludedCocktails=[];
+async function suggestCocktails(refresh=false){
+  if(!CFG.apikey){setSuggestStatus('Configure d\'abord ta clé IA (bouton ⚙)','error');return;}
+  if(!bottles.length){setSuggestStatus('Ajoute d\'abord des bouteilles','error');return;}
+
+  // Si refresh, on accumule les exclusions
+  if(!refresh) _excludedCocktails=[];
+  if(window._aiRecipes) _excludedCocktails.push(...(window._aiRecipes.map(r=>r.name)));
+
+  setSuggestStatus(refresh?'Nouvelles suggestions…':'Génération des recettes…','loading');
+  document.getElementById('ai-cocktails').innerHTML='';
+
+  const stock=bottles.filter(b=>b.qty>0).map(b=>`${b.name} (${b.cat}, ${b.qty} ${b.unit})`).join(', ');
+  const exclusions=_excludedCocktails.length?`\nN'inclus PAS ces cocktails déjà proposés : ${_excludedCocktails.join(', ')}.`:'';
+  const prompt=`Tu es un expert barman. Voici le stock de mon bar personnel : ${stock}.
+Propose 3 recettes de cocktails réalisables avec ces ingrédients.${exclusions}
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte autour, sans markdown :
+[
+  {"name":"Nom du cocktail","emoji":"1 emoji","ingredients":[{"name":"ingrédient","qty":"quantité"}],"prep":"Instructions courtes de préparation","tip":"Conseil du barman"},
+  ...
+]`;
+
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${CFG.apikey}`;
+  const body=JSON.stringify({
+    contents:[{parts:[{text:prompt}]}],
+    generationConfig:{temperature:0.7,maxOutputTokens:1000}
+  });
+
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});
+    const data=await res.json();
+    if(!res.ok) throw new Error(data?.error?.message||'HTTP '+res.status);
+    const raw=data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    const clean=raw.replace(/```json|```/g,'').trim();
+    const recipes=JSON.parse(clean);
+
+    setSuggestStatus(recipes.length+' cocktails suggérés !','ok');
+
+    document.getElementById('ai-cocktails').innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sec-head" style="margin:0">Suggestions IA <span style="font-size:9px;opacity:.6">${recipes.length} recettes</span></div>
+        <button onclick="suggestCocktails(true)"
+          style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:11px;
+          letter-spacing:1px;padding:5px 12px;cursor:pointer;font-family:'Josefin Sans',sans-serif">
+          🔄 Autres
+        </button>
+      </div>
+      ${recipes.map((r,i)=>`
+      <div class="cocktail-card" onclick="openAiRecipe(${i})" style="border-left:4px solid var(--gold)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:36px">${r.emoji||'🍸'}</div>
+          <div>
+            <div class="c-title">${r.name}</div>
+            <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:3px">✦ Suggestion IA</div>
+          </div>
+          <div style="margin-left:auto;font-size:11px;letter-spacing:1px;color:var(--text-muted)">Voir →</div>
+        </div>
+      </div>`).join('')}
+      <div style="height:1px;background:var(--ivory3);margin:16px 0"></div>`;
+
+    // Stocke les recettes IA pour la modal
+    window._aiRecipes=recipes;
+
+  }catch(err){
+    console.error(err);
+    setSuggestStatus('Erreur : '+err.message,'error');
+  }
+}
+
+function openAiRecipe(i){
+  const r=window._aiRecipes[i];
+  document.getElementById('ai-recipe-content').innerHTML=`
+    <div class="modal-handle"></div>
+    <div style="text-align:center;padding:16px 0 8px">
+      <div style="font-size:56px">${r.emoji||'🍸'}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;margin-top:8px">${r.name}</div>
+      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:4px">✦ Suggestion IA</div>
+    </div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div class="sec-head">Ingrédients</div>
+    <div class="info-grid">
+      ${r.ingredients.map(ing=>`
+      <div class="info-row">
+        <span style="display:flex;align-items:center;gap:8px">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;display:inline-block"></span>
+          ${ing.name}
+        </span>
+        <span class="info-val">${ing.qty}</span>
+      </div>`).join('')}
+    </div>
+    <div class="sec-head">Préparation</div>
+    <div class="note-box">${r.prep}</div>
+    ${r.tip?`<div style="background:var(--gold-dim);border-left:3px solid var(--gold);padding:10px 14px;font-size:12px;color:var(--text-mid);margin-bottom:12px">
+      💡 <em>${r.tip}</em></div>`:''}
+    <button class="btn btn-primary" onclick="saveAiCocktail(${i})">＋ Ajouter à mes cocktails</button>
+    <button class="btn btn-ghost" onclick="closeModal('ai-recipe-modal')">Fermer</button>`;
+  openModal('ai-recipe-modal');
+}
+
+function saveAiCocktail(i){
+  const r=window._aiRecipes[i];
+  cocktails.push({id:uid(),name:r.name,emoji:r.emoji||'🍸',ingredients:r.ingredients,prep:r.prep+(r.tip?'\n💡 '+r.tip:'')});
+  saveC();
+  closeModal('ai-recipe-modal');
+  renderCocktails();
+  setSuggestStatus('Cocktail ajouté à ta liste !','ok');
+}
+
+// ── Analyse photo — Google Gemini (gratuit) ───────────
+async function analyzePhoto(dataUrl){
+  setAiStatus('Analyse de la bouteille…','loading');
+  const base64=dataUrl.split(',')[1];
+  const prompt=`Analyse cette photo de bouteille d'alcool. Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ou après, sans markdown :
+{"name":"Nom complet marque+produit","cat":"une valeur parmi: ${CATS.join(',')}","emoji":"1 emoji représentatif","abv":degré_number_ou_0,"origin":"Pays","note":"Arômes et style max 80 chars"}
+Si une info est illisible mets null.`;
+
+  const body=JSON.stringify({
+    contents:[{parts:[
+      {inline_data:{mime_type:'image/jpeg',data:base64}},
+      {text:prompt}
+    ]}],
+    generationConfig:{temperature:0,maxOutputTokens:300}
+  });
+
+  const models=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-flash-lite-latest'];
+  let lastErr='';
+  for(const model of models){
+    try{
+      const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${CFG.apikey}`;
+      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});
+      const data=await res.json();
+      console.log(`${model} réponse:`,data);
+      if(!res.ok){lastErr=data?.error?.message||'HTTP '+res.status;continue;}
+      const raw=data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
+      const clean=raw.replace(/```json|```/g,'').trim();
+      const info=JSON.parse(clean);
+      if(info.name)                         document.getElementById('bm-name').value  =info.name;
+      if(info.cat&&CATS.includes(info.cat)) document.getElementById('bm-cat').value   =info.cat;
+      if(info.emoji)                        document.getElementById('bm-emoji').value =info.emoji;
+      if(info.abv)                          document.getElementById('bm-abv').value   =info.abv;
+      if(info.origin)                       document.getElementById('bm-origin').value=info.origin;
+      if(info.note)                         document.getElementById('bm-note').value  =info.note;
+      setAiStatus('Champs pré-remplis — vérifie et complète !','ok');
+      return;
+    }catch(e){lastErr=e.message;console.warn(model+' échoué:',e.message);}
+  }
+  setAiStatus('Erreur : '+lastErr,'error');
+}
+</script>
+
+</body>
