@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mon Bar Privé</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{
   --ivory:#f5f0e8;--ivory2:#ede6d6;--ivory3:#e2d9c5;
@@ -132,6 +134,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .si-controls{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .si-btn{width:30px;height:30px;border:1px solid var(--ivory3);background:none;color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif}
 .si-qty{font-family:'Cormorant Garamond',serif;font-size:20px;min-width:28px;text-align:center}
+.leaflet-popup-content-wrapper{
+  background:var(--ivory);border:1px solid var(--gold-border);
+  color:var(--text);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+.leaflet-popup-tip{ background:var(--ivory); }
+.leaflet-container{ font-family:'Josefin Sans',sans-serif; }
 .sec-head{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 10px;font-style:italic}
 
 /* Photo */
@@ -223,11 +231,18 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   </div>
 </div>
 
+<!-- PAGE CARTE -->
+<div class="page" id="page-map">
+  <div class="page-head"><div class="page-title">Carte</div><div class="page-sub">Origines de ma collection</div></div>
+  <div id="map-container" style="position:relative;z-index:1;height:calc(100dvh - 130px)"></div>
+</div>
+
 <div class="tabs-bar">
   <div class="tab active" onclick="switchTab('bottles',this)"><span class="ti">🍾</span>Bouteilles</div>
   <div class="tab" onclick="switchTab('cocktails',this)"><span class="ti">🍸</span>Cocktails</div>
   <div class="tab" onclick="switchTab('tasting',this)"><span class="ti">📝</span>Notes</div>
   <div class="tab" onclick="switchTab('stock',this)"><span class="ti">📦</span>Stock</div>
+  <div class="tab" onclick="switchTab('map',this)"><span class="ti">🌍</span>Carte</div>
 </div>
 
 <button class="fab" id="fab-btn">+</button>
@@ -399,7 +414,181 @@ let bottles=[],cocktails=[],tastings=[];
 const CATS=['Gin','Rhum','Whisky','Vodka','Cognac','Tequila','Liqueur','Vermouth','Bière','Vin','Champagne','Soft','Sirop','Autre'];
 const CAT_EMOJI={Gin:'🌿',Rhum:'🍬',Whisky:'🥃',Vodka:'❄️',Cognac:'🍂',Tequila:'🌵',Liqueur:'🍯',Vermouth:'🍷',Bière:'🍺',Vin:'🍷',Champagne:'🥂',Soft:'💧',Sirop:'🫙',Autre:'🍶'};
 
-// ── Sauvegarde ────────────────────────────────────────
+// ── Carte ─────────────────────────────────────────────
+let _map = null;
+let _mapMarkers = [];
+
+// Coordonnées des pays principaux
+const COUNTRY_COORDS = {
+  'france':[46.2,2.2],'écosse':[56.8,-4.2],'scotland':[56.8,-4.2],
+  'irlande':[53.1,-7.7],'ireland':[53.1,-7.7],
+  'angleterre':[52.4,-1.5],'england':[52.4,-1.5],
+  'royaume-uni':[55.4,-3.4],'uk':[55.4,-3.4],
+  'italie':[42.5,12.5],'italy':[42.5,12.5],
+  'espagne':[40.4,-3.7],'spain':[40.4,-3.7],
+  'portugal':[39.5,-8.0],
+  'allemagne':[51.2,10.4],'germany':[51.2,10.4],
+  'belgique':[50.5,4.5],'belgium':[50.5,4.5],
+  'pays-bas':[52.1,5.3],'netherlands':[52.1,5.3],
+  'russie':[61.5,90],'russia':[61.5,90],
+  'pologne':[52.0,19.1],'poland':[52.0,19.1],
+  'suède':[62.0,15.0],'sweden':[62.0,15.0],
+  'norvège':[64.5,15.5],'norway':[64.5,15.5],
+  'finlande':[64.0,25.7],'finland':[64.0,25.7],
+  'grèce':[39.0,22.0],'greece':[39.0,22.0],
+  'turquie':[39.0,35.0],'turkey':[39.0,35.0],
+  'usa':[37.1,-95.7],'états-unis':[37.1,-95.7],'united states':[37.1,-95.7],
+  'canada':[56.1,-106.3],
+  'mexique':[23.6,-102.5],'mexico':[23.6,-102.5],
+  'cuba':[22.0,-79.5],
+  'jamaïque':[18.1,-77.3],'jamaica':[18.1,-77.3],
+  'porto rico':[18.2,-66.5],'puerto rico':[18.2,-66.5],
+  'barbade':[13.2,-59.6],'barbados':[13.2,-59.6],
+  'martinique':[14.6,-61.0],
+  'guadeloupe':[16.3,-61.4],
+  'brésil':[[-14.2,-51.9]],'brazil':[-14.2,-51.9],
+  'colombie':[ 4.6,-74.1],'colombia':[4.6,-74.1],
+  'venezuela':[8.0,-66.2],
+  'pérou':[-9.2,-75.0],'peru':[-9.2,-75.0],
+  'chili':[-30.0,-71.0],'chile':[-30.0,-71.0],
+  'argentine':[-38.4,-63.6],'argentina':[-38.4,-63.6],
+  'japon':[36.2,138.3],'japan':[36.2,138.3],
+  'chine':[35.9,104.2],'china':[35.9,104.2],
+  'corée':[35.9,127.8],'korea':[35.9,127.8],
+  'inde':[20.6,78.9],'india':[20.6,78.9],
+  'australie':[-25.3,133.8],'australia':[-25.3,133.8],
+  'nouvelle-zélande':[-40.9,174.9],'new zealand':[-40.9,174.9],
+  'afrique du sud':[-28.5,24.7],'south africa':[-28.5,24.7],
+  'maroc':[31.8,-7.1],'morocco':[31.8,-7.1],
+  'liban':[33.9,35.5],'lebanon':[33.9,35.5],
+  'arménie':[40.1,45.0],'armenia':[40.1,45.0],
+  'géorgie':[42.3,43.4],'georgia (country)':[42.3,43.4],
+};
+
+// Drapeaux emoji par pays
+const COUNTRY_FLAGS = {
+  'france':'🇫🇷','écosse':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'irlande':'🇮🇪','ireland':'🇮🇪',
+  'angleterre':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','england':'🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  'royaume-uni':'🇬🇧','uk':'🇬🇧',
+  'italie':'🇮🇹','italy':'🇮🇹',
+  'espagne':'🇪🇸','spain':'🇪🇸',
+  'portugal':'🇵🇹',
+  'allemagne':'🇩🇪','germany':'🇩🇪',
+  'belgique':'🇧🇪','belgium':'🇧🇪',
+  'pays-bas':'🇳🇱','netherlands':'🇳🇱',
+  'russie':'🇷🇺','russia':'🇷🇺',
+  'pologne':'🇵🇱','poland':'🇵🇱',
+  'suède':'🇸🇪','sweden':'🇸🇪',
+  'norvège':'🇳🇴','norway':'🇳🇴',
+  'finlande':'🇫🇮','finland':'🇫🇮',
+  'grèce':'🇬🇷','greece':'🇬🇷',
+  'turquie':'🇹🇷','turkey':'🇹🇷',
+  'usa':'🇺🇸','états-unis':'🇺🇸','united states':'🇺🇸',
+  'canada':'🇨🇦',
+  'mexique':'🇲🇽','mexico':'🇲🇽',
+  'cuba':'🇨🇺',
+  'jamaïque':'🇯🇲','jamaica':'🇯🇲',
+  'porto rico':'🇵🇷','puerto rico':'🇵🇷',
+  'barbade':'🇧🇧','barbados':'🇧🇧',
+  'martinique':'🇲🇶','guadeloupe':'🇬🇵',
+  'brésil':'🇧🇷','brazil':'🇧🇷',
+  'colombie':'🇨🇴','colombia':'🇨🇴',
+  'venezuela':'🇻🇪','pérou':'🇵🇪','peru':'🇵🇪',
+  'chili':'🇨🇱','chile':'🇨🇱',
+  'argentine':'🇦🇷','argentina':'🇦🇷',
+  'japon':'🇯🇵','japan':'🇯🇵',
+  'chine':'🇨🇳','china':'🇨🇳',
+  'corée':'🇰🇷','korea':'🇰🇷',
+  'inde':'🇮🇳','india':'🇮🇳',
+  'australie':'🇦🇺','australia':'🇦🇺',
+  'nouvelle-zélande':'🇳🇿','new zealand':'🇳🇿',
+  'afrique du sud':'🇿🇦','south africa':'🇿🇦',
+  'maroc':'🇲🇦','morocco':'🇲🇦',
+  'liban':'🇱🇧','lebanon':'🇱🇧',
+  'arménie':'🇦🇲','armenia':'🇦🇲',
+  'géorgie':'🇬🇪',
+};
+
+function findCountryKey(origin){
+  if(!origin) return null;
+  const raw = origin.toLowerCase().trim();
+  // Correspondance exacte
+  if(COUNTRY_COORDS[raw]) return raw;
+  // Correspondance partielle — le pays saisi contient une clé connue ou vice versa
+  for(const key of Object.keys(COUNTRY_COORDS)){
+    if(raw.includes(key) || key.includes(raw)) return key;
+  }
+  return null;
+}
+
+function renderMap(){
+  const container = document.getElementById('map-container');
+
+  // Init carte une seule fois
+  if(!_map){
+    _map = L.map('map-container', {
+      center:[20,10], zoom:2,
+      zoomControl:true,
+      attributionControl:false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:18
+    }).addTo(_map);
+  }
+
+  // Supprime les anciens marqueurs
+  _mapMarkers.forEach(m=>_map.removeLayer(m));
+  _mapMarkers=[];
+
+  // Regroupe les bouteilles par pays
+  const byCountry = {};
+  bottles.forEach(b=>{
+    if(!b.origin) return;
+    const key = findCountryKey(b.origin);
+    if(!key) return;
+    if(!byCountry[key]) byCountry[key]=[];
+    byCountry[key].push(b);
+  });
+
+  // Ajoute un marqueur par pays
+  Object.entries(byCountry).forEach(([country, bots])=>{
+    const coords = COUNTRY_COORDS[country];
+    if(!coords) return;
+    const flag  = COUNTRY_FLAGS[country] || '🍾';
+    const names = bots.map(b=>`<div style="padding:3px 0;border-bottom:1px solid rgba(0,0,0,.1);font-size:12px">${b.emoji||'🍾'} ${b.name}</div>`).join('');
+
+    const icon = L.divIcon({
+      html:`<div style="font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))">${flag}</div>`,
+      className:'',
+      iconSize:[36,36],
+      iconAnchor:[18,18],
+    });
+
+    const marker = L.marker(coords, {icon})
+      .bindPopup(`
+        <div style="font-family:'Josefin Sans',sans-serif;min-width:160px">
+          <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#b8923a;margin-bottom:8px;font-weight:600">
+            ${flag} ${bots[0].origin}
+          </div>
+          ${names}
+          <div style="font-size:10px;color:#9a8c78;margin-top:6px;letter-spacing:1px">${bots.length} bouteille${bots.length>1?'s':''}</div>
+        </div>`,
+        {className:'bar-popup'}
+      )
+      .addTo(_map);
+
+    _mapMarkers.push(marker);
+  });
+
+  // Ajuste la vue si des marqueurs existent
+  if(_mapMarkers.length){
+    const group = L.featureGroup(_mapMarkers);
+    _map.fitBounds(group.getBounds().pad(0.3));
+  }
+
+  setTimeout(()=>_map.invalidateSize(),100);
+}
 function openBackup(){
   const el=document.getElementById('backup-info');
   const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -412,40 +601,82 @@ function openBackup(){
   openModal('backup-modal');
 }
 
-function exportData(){
-  const data={
-    version:1,
-    date:new Date().toISOString(),
-    bottles, cocktails, tastings
-  };
+async function exportData(){
+  const photos = await loadAllPhotos();
+  const bottlesWithPhotos = bottles.map(b=>({...b, photo: photos[b.id]||b.photo||null}));
+  const data={version:2,date:new Date().toISOString(),bottles:bottlesWithPhotos,cocktails,tastings};
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   const dateStr=new Date().toISOString().slice(0,10);
-  a.href=url;
-  a.download=`monbar-sauvegarde-${dateStr}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.href=url; a.download=`monbar-sauvegarde-${dateStr}.json`;
+  a.click(); URL.revokeObjectURL(url);
   showBackupStatus('Sauvegarde téléchargée !','ok');
 }
 
 function importData(e){
   const file=e.target.files[0]; if(!file)return;
   const reader=new FileReader();
-  reader.onload=ev=>{
+  reader.onload=async ev=>{
     try{
       const data=JSON.parse(ev.target.result);
       if(!data.bottles||!data.cocktails) throw new Error('Fichier invalide');
-      if(!confirm(`Importer ${data.bottles.length} bouteilles, ${data.cocktails.length} cocktails et ${(data.tastings||[]).length} notes ?\n\nCela remplacera toutes tes données actuelles.`)) return;
-      bottles  = data.bottles  || [];
-      cocktails= data.cocktails|| [];
-      tastings = data.tastings || [];
-      saveB(); saveC(); saveT();
-      renderBottles();
-      showBackupStatus(`Import réussi — ${bottles.length} bouteilles restaurées !`,'ok');
+
+      // Choix du mode d'import
+      const mode = confirm(
+        `Sauvegarde : ${data.bottles.length} bouteilles\nActuel : ${bottles.length} bouteilles\n\n` +
+        `OK → Fusionner (remplace les bouteilles sans photo par celles de la sauvegarde)\n` +
+        `Annuler → Remplacer tout`
+      );
+
+      if(mode){
+        // ── Mode fusion ──
+        const photosDB = await loadAllPhotos();
+        for(const imported of data.bottles){
+          const existingIdx = bottles.findIndex(b=>b.id===imported.id || b.name.toLowerCase()===imported.name.toLowerCase());
+          if(existingIdx>=0){
+            const existing = bottles[existingIdx];
+            const hasPhoto = photosDB[existing.id] || existing.photo;
+            if(!hasPhoto){
+              // Remplace la bouteille existante (sans photo) par celle de la sauvegarde
+              bottles[existingIdx] = {...imported};
+              if(imported.photo) await savePhoto(imported.id, imported.photo);
+            }
+            // Si elle a déjà une photo → on garde l'existante, on ne touche pas
+          } else {
+            // Nouvelle bouteille absente du stock actuel → on l'ajoute
+            bottles.push({...imported});
+            if(imported.photo) await savePhoto(imported.id, imported.photo);
+          }
+        }
+        // Cocktails et notes : on ajoute ceux qui n'existent pas déjà
+        for(const c of (data.cocktails||[])){
+          if(!cocktails.find(x=>x.id===c.id)) cocktails.push(c);
+        }
+        for(const t of (data.tastings||[])){
+          if(!tastings.find(x=>x.id===t.id)) tastings.push(t);
+        }
+        saveB(); saveC(); saveT();
+        renderBottles();
+        showBackupStatus(`Fusion réussie — ${bottles.length} bouteilles au total !`,'ok');
+
+      } else {
+        // ── Mode remplacement total ──
+        if(!confirm('Remplacer TOUTES les données actuelles ?')) return;
+        bottles  = data.bottles.map(b=>({...b}));
+        cocktails= data.cocktails||[];
+        tastings = data.tastings||[];
+        for(const b of bottles){
+          if(b.photo){ await savePhoto(b.id, b.photo); }
+        }
+        saveB(); saveC(); saveT();
+        renderBottles();
+        showBackupStatus(`Import réussi — ${bottles.length} bouteilles restaurées !`,'ok');
+      }
     }catch(err){
-      showBackupStatus('Erreur : fichier invalide','error');
+      console.error(err);
+      showBackupStatus('Erreur : '+err.message,'error');
     }
   };
   reader.readAsText(file);
@@ -474,28 +705,86 @@ function saveConfig(){
   document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
 }
 
+// ── IndexedDB pour les photos ─────────────────────────
+let _db = null;
+
+function initDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open('monbar_photos', 1);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore('photos', {keyPath:'id'});
+    };
+    req.onsuccess = e => { _db = e.target.result; resolve(); };
+    req.onerror   = e => { console.error('IndexedDB error', e); resolve(); }; // on continue même si ça échoue
+  });
+}
+
+function savePhoto(bottleId, dataUrl){
+  if(!_db || !dataUrl) return Promise.resolve();
+  return new Promise((resolve)=>{
+    const tx = _db.transaction('photos','readwrite');
+    tx.objectStore('photos').put({id:bottleId, data:dataUrl});
+    tx.oncomplete = resolve;
+    tx.onerror    = resolve;
+  });
+}
+
+function deletePhoto(bottleId){
+  if(!_db) return Promise.resolve();
+  return new Promise((resolve)=>{
+    const tx = _db.transaction('photos','readwrite');
+    tx.objectStore('photos').delete(bottleId);
+    tx.oncomplete = resolve;
+    tx.onerror    = resolve;
+  });
+}
+
+function loadPhoto(bottleId){
+  if(!_db) return Promise.resolve(null);
+  return new Promise((resolve)=>{
+    const tx  = _db.transaction('photos','readonly');
+    const req = tx.objectStore('photos').get(bottleId);
+    req.onsuccess = e => resolve(e.target.result?.data || null);
+    req.onerror   = ()=> resolve(null);
+  });
+}
+
+function loadAllPhotos(){
+  if(!_db) return Promise.resolve({});
+  return new Promise((resolve)=>{
+    const tx  = _db.transaction('photos','readonly');
+    const req = tx.objectStore('photos').getAll();
+    req.onsuccess = e => {
+      const map = {};
+      (e.target.result||[]).forEach(p => map[p.id]=p.data);
+      resolve(map);
+    };
+    req.onerror = ()=> resolve({});
+  });
+}
+
 // ── Data ──────────────────────────────────────────────
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-function load(){
+
+async function load(){
+  await initDB();
   try{bottles=JSON.parse(localStorage.getItem(LS.B))||[];}catch{bottles=[];}
   try{cocktails=JSON.parse(localStorage.getItem(LS.C))||[];}catch{cocktails=[];}
   try{tastings=JSON.parse(localStorage.getItem(LS.T))||[];}catch{tastings=[];}
+
+  // Charge les photos depuis IndexedDB
+  const photos = await loadAllPhotos();
+  bottles.forEach(b=>{ if(photos[b.id]) b.photo=photos[b.id]; });
+
   if(!bottles.length)   seedBottles();
   if(!cocktails.length) seedCocktails();
 }
+
 function saveB(){
-  try{
-    localStorage.setItem(LS.B,JSON.stringify(bottles));
-  } catch(e){
-    // Stockage plein — on réessaie sans les photos
-    try{
-      const bottlesNoPhoto = bottles.map(b=>({...b, photo:null}));
-      localStorage.setItem(LS.B,JSON.stringify(bottlesNoPhoto));
-      alert('⚠️ Stockage presque plein — la photo n\'a pas pu être sauvegardée mais les autres données sont enregistrées. Fais une sauvegarde via 💾 puis supprime des photos pour libérer de l\'espace.');
-    } catch(e2){
-      alert('⚠️ Stockage complètement plein ! Fais une sauvegarde via 💾 puis recharge la page.');
-    }
-  }
+  // Sauvegarde sans les photos dans localStorage (photos → IndexedDB)
+  const bottlesNoPhoto = bottles.map(b=>({...b, photo:null}));
+  try{ localStorage.setItem(LS.B, JSON.stringify(bottlesNoPhoto)); }
+  catch(e){ alert('⚠️ Erreur de sauvegarde : '+e.message); }
 }
 function saveC(){ localStorage.setItem(LS.C,JSON.stringify(cocktails)); }
 function saveT(){ localStorage.setItem(LS.T,JSON.stringify(tastings)); }
@@ -525,11 +814,12 @@ function switchTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   el.classList.add('active');
-  document.getElementById('fab-btn').style.display=name==='stock'?'none':'flex';
+  document.getElementById('fab-btn').style.display=name==='stock'||name==='map'?'none':'flex';
   if(name==='bottles')   renderBottles();
   if(name==='cocktails') renderCocktails();
   if(name==='tasting')   renderTasting();
   if(name==='stock')     renderStock();
+  if(name==='map')       renderMap();
 }
 document.getElementById('fab-btn').addEventListener('click',()=>{
   if(currentTab==='bottles')   openBottleModal();
@@ -694,11 +984,12 @@ function resetBottleForm(){
   document.getElementById('bm-stars')._setVal(0);
   _photo=null; clearPhoto();
 }
-function saveBottle(){
+async function saveBottle(){
   const name=document.getElementById('bm-name').value.trim(); if(!name){document.getElementById('bm-name').focus();return;}
-  const id=document.getElementById('bm-id').value;
+  const id=document.getElementById('bm-id').value||uid();
   const existPhoto=id?(bottles.find(x=>x.id===id)||{}).photo:null;
-  const obj={id:id||uid(),name,
+  const photoToUse = _photo!==null ? _photo : existPhoto;
+  const obj={id,name,
     cat:document.getElementById('bm-cat').value,
     emoji:document.getElementById('bm-emoji').value.trim(),
     qty:parseFloat(document.getElementById('bm-qty').value)||0,
@@ -709,12 +1000,21 @@ function saveBottle(){
     bottles:parseInt(document.getElementById('bm-bottles').value)||null,
     stars:document.getElementById('bm-stars')._getVal(),
     note:document.getElementById('bm-note').value.trim(),
-    photo:_photo!==null?_photo:existPhoto};
-  if(id){const i=bottles.findIndex(x=>x.id===id);if(i>=0)bottles[i]=obj;}else bottles.push(obj);
-  saveB();closeModal('bottle-modal');renderBottles();
+    photo: photoToUse // gardé en mémoire pour l'affichage
+  };
+  const editId=document.getElementById('bm-id').value;
+  if(editId){const i=bottles.findIndex(x=>x.id===editId);if(i>=0)bottles[i]=obj;}else bottles.push(obj);
+
+  // Photo → IndexedDB, reste → localStorage
+  if(photoToUse) await savePhoto(obj.id, photoToUse);
+  else if(_photo===null && editId) await deletePhoto(editId); // photo supprimée
+  saveB();
+  closeModal('bottle-modal');renderBottles();
 }
-function deleteBottle(){
-  bottles=bottles.filter(x=>x.id!==document.getElementById('bm-id').value);
+async function deleteBottle(){
+  const id=document.getElementById('bm-id').value;
+  bottles=bottles.filter(x=>x.id!==id);
+  await deletePhoto(id);
   saveB();closeModal('bottle-modal');renderBottles();
 }
 function openBottleDetail(id){
@@ -894,11 +1194,12 @@ function adjStk(id,d){
 }
 
 // ── Init ──────────────────────────────────────────────
-load();
-loadConfig();
-initStarInput('bm-stars');
-initStarInput('tm-stars');
-renderBottles();
+load().then(()=>{
+  loadConfig();
+  initStarInput('bm-stars');
+  initStarInput('tm-stars');
+  renderBottles();
+});
 </script>
 <!-- MODAL RECETTE IA -->
 <div class="modal-overlay" id="ai-recipe-modal" onclick="closeOnBg(event,'ai-recipe-modal')">
