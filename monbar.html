@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mon Bar Privé</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{
   --ivory:#f5f0e8;--ivory2:#ede6d6;--ivory3:#e2d9c5;
@@ -132,6 +134,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .si-controls{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .si-btn{width:30px;height:30px;border:1px solid var(--ivory3);background:none;color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif}
 .si-qty{font-family:'Cormorant Garamond',serif;font-size:20px;min-width:28px;text-align:center}
+.leaflet-popup-content-wrapper{
+  background:var(--ivory);border:1px solid var(--gold-border);
+  color:var(--text);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+.leaflet-popup-tip{ background:var(--ivory); }
+.leaflet-container{ font-family:'Josefin Sans',sans-serif; }
 .sec-head{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 10px;font-style:italic}
 
 /* Photo */
@@ -223,11 +231,18 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   </div>
 </div>
 
+<!-- PAGE CARTE -->
+<div class="page" id="page-map">
+  <div class="page-head"><div class="page-title">Carte</div><div class="page-sub">Origines de ma collection</div></div>
+  <div id="map-container" style="position:relative;z-index:1;height:calc(100dvh - 130px)"></div>
+</div>
+
 <div class="tabs-bar">
   <div class="tab active" onclick="switchTab('bottles',this)"><span class="ti">🍾</span>Bouteilles</div>
   <div class="tab" onclick="switchTab('cocktails',this)"><span class="ti">🍸</span>Cocktails</div>
   <div class="tab" onclick="switchTab('tasting',this)"><span class="ti">📝</span>Notes</div>
   <div class="tab" onclick="switchTab('stock',this)"><span class="ti">📦</span>Stock</div>
+  <div class="tab" onclick="switchTab('map',this)"><span class="ti">🌍</span>Carte</div>
 </div>
 
 <button class="fab" id="fab-btn">+</button>
@@ -399,7 +414,286 @@ let bottles=[],cocktails=[],tastings=[];
 const CATS=['Gin','Rhum','Whisky','Vodka','Cognac','Tequila','Liqueur','Vermouth','Bière','Vin','Champagne','Soft','Sirop','Autre'];
 const CAT_EMOJI={Gin:'🌿',Rhum:'🍬',Whisky:'🥃',Vodka:'❄️',Cognac:'🍂',Tequila:'🌵',Liqueur:'🍯',Vermouth:'🍷',Bière:'🍺',Vin:'🍷',Champagne:'🥂',Soft:'💧',Sirop:'🫙',Autre:'🍶'};
 
-// ── Sauvegarde ────────────────────────────────────────
+// ── Carte ─────────────────────────────────────────────
+let _map = null;
+let _mapMarkers = [];
+let _geocodeCache = {};
+
+function findCountryKey(origin){ return origin?.toLowerCase().trim()||null; }
+
+async function geocodeCountry(country){
+  const key = country.toLowerCase().trim();
+  if(_geocodeCache[key]) return _geocodeCache[key];
+  try{
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(country)}&featuretype=country&limit=1&format=json`,
+      {headers:{'Accept-Language':'fr'}});
+    const data = await res.json();
+    if(data.length){
+      const coords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+      _geocodeCache[key] = coords;
+      return coords;
+    }
+  } catch(e){ console.warn('Geocode failed for', country, e); }
+  return null;
+}
+
+function countryToFlag(country){
+  // Convertit un nom de pays en emoji drapeau via code ISO
+  const map = {
+    'france':'FR','écosse':'GB','scotland':'GB','scotland':'GB',
+    'ireland':'IE','irlande':'IE',
+    'italy':'IT','italie':'IT',
+    'spain':'ES','espagne':'ES',
+    'portugal':'PT',
+    'germany':'DE','allemagne':'DE',
+    'belgium':'BE','belgique':'BE',
+    'netherlands':'NL','pays-bas':'NL',
+    'russia':'RU','russie':'RU',
+    'poland':'PL','pologne':'PL',
+    'sweden':'SE','suède':'SE',
+    'norway':'NO','norvège':'NO',
+    'finland':'FI','finlande':'FI',
+    'greece':'GR','grèce':'GR',
+    'turkey':'TR','turquie':'TR',
+    'united states':'US','usa':'US','états-unis':'US','us':'US',
+    'canada':'CA',
+    'mexico':'MX','mexique':'MX',
+    'cuba':'CU',
+    'jamaica':'JM','jamaïque':'JM',
+    'puerto rico':'PR','porto rico':'PR',
+    'barbados':'BB','barbade':'BB',
+    'martinique':'MQ','guadeloupe':'GP',
+    'brazil':'BR','brésil':'BR',
+    'colombia':'CO','colombie':'CO',
+    'venezuela':'VE',
+    'peru':'PE','pérou':'PE',
+    'chile':'CL','chili':'CL',
+    'argentina':'AR','argentine':'AR',
+    'japan':'JP','japon':'JP',
+    'china':'CN','chine':'CN',
+    'south korea':'KR','korea':'KR','corée':'KR',
+    'india':'IN','inde':'IN',
+    'australia':'AU','australie':'AU',
+    'new zealand':'NZ','nouvelle-zélande':'NZ',
+    'south africa':'ZA','afrique du sud':'ZA',
+    'morocco':'MA','maroc':'MA',
+    'lebanon':'LB','liban':'LB',
+    'armenia':'AM','arménie':'AM',
+    'georgia':'GE','géorgie':'GE',
+    'sweden':'SE','denmark':'DK','danemark':'DK',
+    'austria':'AT','autriche':'AT',
+    'switzerland':'CH','suisse':'CH',
+    'czech republic':'CZ','tchéquie':'CZ',
+    'hungary':'HU','hongrie':'HU',
+    'romania':'RO','roumanie':'RO',
+    'ukraine':'UA',
+    'taiwan':'TW','taïwan':'TW',
+    'thailand':'TH','thaïlande':'TH',
+    'vietnam':'VN','viêt nam':'VN',
+    'philippines':'PH',
+    'indonesia':'ID','indonésie':'ID',
+    'singapore':'SG','singapour':'SG',
+    'malaysia':'MY','malaisie':'MY',
+    'trinidad':'TT','trinidad and tobago':'TT',
+    'haiti':'HT','haïti':'HT',
+    'nicaragua':'NI','guatemala':'GT',
+    'el salvador':'SV','costa rica':'CR',
+    'panama':'PA',
+    'bolivia':'BO','bolivie':'BO',
+    'ecuador':'EC','équateur':'EC',
+    'uruguay':'UY',
+    'paraguay':'PY',
+    'nigeria':'NG',
+    'kenya':'KE',
+    'ethiopia':'ET','éthiopie':'ET',
+    'egypt':'EG','égypte':'EG',
+    'tunisia':'TN','tunisie':'TN',
+    'algeria':'DZ','algérie':'DZ',
+  };
+  const iso = map[country.toLowerCase().trim()];
+  if(!iso) return '🍾';
+  // Convertit code ISO en emoji drapeau
+  return iso.split('').map(c=>String.fromCodePoint(c.charCodeAt(0)+127397)).join('');
+}
+
+async function renderMap(){
+  const container = document.getElementById('map-container');
+  if(!_map){
+    _map = L.map('map-container',{center:[20,10],zoom:2,zoomControl:true,attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(_map);
+  }
+  _mapMarkers.forEach(m=>_map.removeLayer(m));
+  _mapMarkers=[];
+
+  // Regroupe par pays
+  const byCountry={};
+  bottles.forEach(b=>{
+    if(!b.origin) return;
+    const key=b.origin.trim();
+    if(!byCountry[key]) byCountry[key]=[];
+    byCountry[key].push(b);
+  });
+
+  // Géocode chaque pays et place le marqueur
+  const promises = Object.entries(byCountry).map(async([country, bots])=>{
+    const coords = await geocodeCountry(country);
+    if(!coords) return;
+    const flag = countryToFlag(country);
+    const names = bots.map(b=>`<div style="padding:3px 0;border-bottom:1px solid rgba(0,0,0,.08);font-size:12px">${b.emoji||'🍾'} ${b.name}</div>`).join('');
+    const icon = L.divIcon({
+      html:`<div style="font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))">${flag}</div>`,
+      className:'',iconSize:[36,36],iconAnchor:[18,18]
+    });
+    const marker = L.marker(coords,{icon})
+      .bindPopup(`
+        <div style="font-family:'Josefin Sans',sans-serif;min-width:160px">
+          <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#b8923a;margin-bottom:8px;font-weight:600">${flag} ${country}</div>
+          ${names}
+          <div style="font-size:10px;color:#9a8c78;margin-top:6px;letter-spacing:1px">${bots.length} bouteille${bots.length>1?'s':''}</div>
+        </div>`)
+      .addTo(_map);
+    _mapMarkers.push(marker);
+  });
+
+  await Promise.all(promises);
+
+  if(_mapMarkers.length){
+    const group=L.featureGroup(_mapMarkers);
+    _map.fitBounds(group.getBounds().pad(0.3));
+  }
+  setTimeout(()=>_map.invalidateSize(),100);
+}
+  'france':[46.2,2.2],'écosse':[56.8,-4.2],'scotland':[56.8,-4.2],
+  'irlande':[53.1,-7.7],'ireland':[53.1,-7.7],
+  'angleterre':[52.4,-1.5],'england':[52.4,-1.5],
+  'royaume-uni':[55.4,-3.4],'uk':[55.4,-3.4],
+  'italie':[42.5,12.5],'italy':[42.5,12.5],
+  'espagne':[40.4,-3.7],'spain':[40.4,-3.7],
+  'portugal':[39.5,-8.0],
+  'allemagne':[51.2,10.4],'germany':[51.2,10.4],
+  'belgique':[50.5,4.5],'belgium':[50.5,4.5],
+  'pays-bas':[52.1,5.3],'netherlands':[52.1,5.3],
+  'russie':[61.5,90],'russia':[61.5,90],
+  'pologne':[52.0,19.1],'poland':[52.0,19.1],
+  'suède':[62.0,15.0],'sweden':[62.0,15.0],
+  'norvège':[64.5,15.5],'norway':[64.5,15.5],
+  'finlande':[64.0,25.7],'finland':[64.0,25.7],
+  'grèce':[39.0,22.0],'greece':[39.0,22.0],
+  'turquie':[39.0,35.0],'turkey':[39.0,35.0],
+  'usa':[37.1,-95.7],'états-unis':[37.1,-95.7],'united states':[37.1,-95.7],
+  'canada':[56.1,-106.3],
+  'mexique':[23.6,-102.5],'mexico':[23.6,-102.5],
+  'cuba':[22.0,-79.5],
+  'jamaïque':[18.1,-77.3],'jamaica':[18.1,-77.3],
+  'porto rico':[18.2,-66.5],'puerto rico':[18.2,-66.5],
+  'barbade':[13.2,-59.6],'barbados':[13.2,-59.6],
+  'martinique':[14.6,-61.0],
+  'guadeloupe':[16.3,-61.4],
+  'brésil':[[-14.2,-51.9]],'brazil':[-14.2,-51.9],
+  'colombie':[ 4.6,-74.1],'colombia':[4.6,-74.1],
+  'venezuela':[8.0,-66.2],
+  'pérou':[-9.2,-75.0],'peru':[-9.2,-75.0],
+  'chili':[-30.0,-71.0],'chile':[-30.0,-71.0],
+  'argentine':[-38.4,-63.6],'argentina':[-38.4,-63.6],
+  'japon':[36.2,138.3],'japan':[36.2,138.3],
+  'chine':[35.9,104.2],'china':[35.9,104.2],
+  'corée':[35.9,127.8],'korea':[35.9,127.8],
+  'inde':[20.6,78.9],'india':[20.6,78.9],
+  'australie':[-25.3,133.8],'australia':[-25.3,133.8],
+  'nouvelle-zélande':[-40.9,174.9],'new zealand':[-40.9,174.9],
+  'afrique du sud':[-28.5,24.7],'south africa':[-28.5,24.7],
+  'maroc':[31.8,-7.1],'morocco':[31.8,-7.1],
+  'liban':[33.9,35.5],'lebanon':[33.9,35.5],
+  'arménie':[40.1,45.0],'armenia':[40.1,45.0],
+  'géorgie':[42.3,43.4],'georgia (country)':[42.3,43.4],
+};
+
+// Drapeaux emoji par pays
+const COUNTRY_FLAGS = {
+  'france':'🇫🇷','écosse':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'irlande':'🇮🇪','ireland':'🇮🇪',
+  'angleterre':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','england':'🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  'royaume-uni':'🇬🇧','uk':'🇬🇧',
+  'italie':'🇮🇹','italy':'🇮🇹',
+  'espagne':'🇪🇸','spain':'🇪🇸',
+  'portugal':'🇵🇹',
+  'allemagne':'🇩🇪','germany':'🇩🇪',
+  'belgique':'🇧🇪','belgium':'🇧🇪',
+  'pays-bas':'🇳🇱','netherlands':'🇳🇱',
+  'russie':'🇷🇺','russia':'🇷🇺',
+  'pologne':'🇵🇱','poland':'🇵🇱',
+  'suède':'🇸🇪','sweden':'🇸🇪',
+  'norvège':'🇳🇴','norway':'🇳🇴',
+  'finlande':'🇫🇮','finland':'🇫🇮',
+  'grèce':'🇬🇷','greece':'🇬🇷',
+  'turquie':'🇹🇷','turkey':'🇹🇷',
+  'usa':'🇺🇸','états-unis':'🇺🇸','united states':'🇺🇸',
+  'canada':'🇨🇦',
+  'mexique':'🇲🇽','mexico':'🇲🇽',
+  'cuba':'🇨🇺',
+  'jamaïque':'🇯🇲','jamaica':'🇯🇲',
+  'porto rico':'🇵🇷','puerto rico':'🇵🇷',
+  'barbade':'🇧🇧','barbados':'🇧🇧',
+  'martinique':'🇲🇶','guadeloupe':'🇬🇵',
+  'brésil':'🇧🇷','brazil':'🇧🇷',
+  'colombie':'🇨🇴','colombia':'🇨🇴',
+  'venezuela':'🇻🇪','pérou':'🇵🇪','peru':'🇵🇪',
+  'chili':'🇨🇱','chile':'🇨🇱',
+  'argentine':'🇦🇷','argentina':'🇦🇷',
+  'japon':'🇯🇵','japan':'🇯🇵',
+  'chine':'🇨🇳','china':'🇨🇳',
+  'corée':'🇰🇷','korea':'🇰🇷',
+  'inde':'🇮🇳','india':'🇮🇳',
+  'australie':'🇦🇺','australia':'🇦🇺',
+  'nouvelle-zélande':'🇳🇿','new zealand':'🇳🇿',
+  'afrique du sud':'🇿🇦','south africa':'🇿🇦',
+  'maroc':'🇲🇦','morocco':'🇲🇦',
+  'liban':'🇱🇧','lebanon':'🇱🇧',
+  'arménie':'🇦🇲','armenia':'🇦🇲',
+  'géorgie':'🇬🇪',
+};
+
+function findCountryKey(origin){
+  if(!origin) return null;
+  const raw = origin.toLowerCase().trim();
+  // Correspondance exacte
+  if(COUNTRY_COORDS[raw]) return raw;
+  // Correspondance partielle — le pays saisi contient une clé connue ou vice versa
+  for(const key of Object.keys(COUNTRY_COORDS)){
+    if(raw.includes(key) || key.includes(raw)) return key;
+  }
+  return null;
+}
+
+function renderMap(){
+  const container = document.getElementById('map-container');
+
+  // Init carte une seule fois
+  if(!_map){
+    _map = L.map('map-container', {
+      center:[20,10], zoom:2,
+      zoomControl:true,
+      attributionControl:false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:18
+    }).addTo(_map);
+  }
+
+  // Supprime les anciens marqueurs
+  _mapMarkers.forEach(m=>_map.removeLayer(m));
+  _mapMarkers=[];
+
+  // Regroupe les bouteilles par pays
+  const byCountry = {};
+  bottles.forEach(b=>{
+    if(!b.origin) return;
+    const key = findCountryKey(b.origin);
+    if(!key) return;
+    if(!byCountry[key]) byCountry[key]=[];
+    byCountry[key].push(b);
+  });
+
 function openBackup(){
   const el=document.getElementById('backup-info');
   const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -625,12 +919,12 @@ function switchTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   el.classList.add('active');
-  document.getElementById('fab-btn').style.display=name==='stock'?'none':'flex';
+  document.getElementById('fab-btn').style.display=name==='stock'||name==='map'?'none':'flex';
   if(name==='bottles')   renderBottles();
   if(name==='cocktails') renderCocktails();
   if(name==='tasting')   renderTasting();
   if(name==='stock')     renderStock();
-}
+  if(name==='map')       renderMap();}
 document.getElementById('fab-btn').addEventListener('click',()=>{
   if(currentTab==='bottles')   openBottleModal();
   if(currentTab==='cocktails') openCocktailModal();
