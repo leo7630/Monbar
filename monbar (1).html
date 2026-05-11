@@ -14,162 +14,159 @@
   --gold-dim:rgba(184,146,58,.15);--gold-border:rgba(184,146,58,.35);
   --red:#8b3a3a;--green:#3a6b4a;
   --text:#1a1510;--text-mid:#5a4e3a;--text-muted:#9a8c78;
-  --tab-h:64px;
+  --tab-h:60px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Josefin Sans',sans-serif;background:var(--ivory);color:var(--text);min-height:100dvh;padding-bottom:var(--tab-h);overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.6}
-.deco-line{display:flex;align-items:center;gap:10px;margin:8px 0}
-.deco-line::before,.deco-line::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent)}
-.deco-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
-.header{position:sticky;top:0;z-index:50;background:var(--noir);padding:0 20px}
-.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;border-bottom:1px solid var(--gold-border)}
-.logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--gold2);line-height:1}
-.logo small{font-family:'Josefin Sans',sans-serif;font-style:normal;font-size:8px;letter-spacing:4px;color:var(--text-muted);display:block;text-transform:uppercase;margin-top:2px}
-.h-dots{display:flex;gap:4px}
-.h-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.5}
-.h-dot.on{opacity:1}
+/* ── Header ── */
+.header{position:sticky;top:0;z-index:50;background:var(--noir);padding:0 16px}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0 10px;border-bottom:1px solid var(--gold-border)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold2);line-height:1}
+.logo small{font-family:'Josefin Sans',sans-serif;font-style:normal;font-size:7px;letter-spacing:4px;color:var(--text-muted);display:block;text-transform:uppercase;margin-top:2px}
+.hbtn{background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:14px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* ── Tabs ── */
 .tabs-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;height:var(--tab-h);background:var(--noir);border-top:1px solid var(--gold-border);display:flex}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text-muted);font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding-bottom:4px;position:relative}
-.tab::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .25s cubic-bezier(.22,1,.36,1)}
-.tab.active{color:var(--gold2)}
-.tab.active::after{transform:scaleX(1)}
-.tab .ti{font-size:20px}
-.page{display:none;animation:fadeIn .3s ease}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.page-head{padding:20px 20px 0;background:var(--noir)}
-.page-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-style:italic;color:var(--gold2)}
-.page-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px;margin-bottom:12px}
-.content{padding:16px 16px 20px;position:relative;z-index:1}
-.search-wrap{background:var(--noir);padding:0 20px 14px}
-.search-box{display:flex;align-items:center;gap:10px;background:var(--noir3);border:1px solid var(--gold-border);padding:9px 14px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--text-muted);font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding-bottom:3px;position:relative}
+.tab::after{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .25s}
+.tab.active{color:var(--gold2)}.tab.active::after{transform:scaleX(1)}
+.tab .ti{font-size:18px}
+/* ── Pages ── */
+.page{display:none;animation:fadeIn .25s ease}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.page-head{padding:16px 16px 0;background:var(--noir)}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:var(--gold2)}
+.page-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px;margin-bottom:10px}
+.content{padding:12px 16px 20px;position:relative;z-index:1}
+/* ── Search ── */
+.search-wrap{background:var(--noir);padding:0 16px 12px}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--noir3);border:1px solid var(--gold-border);padding:8px 12px}
 .search-box input{flex:1;background:none;border:none;outline:none;color:var(--ivory);font-family:'Josefin Sans',sans-serif;font-size:13px}
 .search-box input::placeholder{color:var(--text-muted)}
-.pills{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 0;background:var(--noir);scrollbar-width:none}
+.pills{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 0;background:var(--noir);scrollbar-width:none}
 .pills::-webkit-scrollbar{display:none}
-.pill{flex-shrink:0;padding:5px 14px;border:1px solid var(--gold-border);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;background:transparent;font-family:'Josefin Sans',sans-serif}
+.pill{flex-shrink:0;padding:4px 12px;border:1px solid var(--gold-border);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;background:transparent;font-family:'Josefin Sans',sans-serif}
 .pill.active{background:var(--gold);border-color:var(--gold);color:var(--noir);font-weight:600}
-.pills-spacer{height:12px;background:var(--noir)}
-.bottle-list{display:flex;flex-direction:column;gap:10px}
-.bottle-card{background:white;border:1px solid var(--ivory3);border-left:4px solid var(--gold);border-radius:4px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}
-.b-photo{width:100%;height:120px;object-fit:cover;display:block}
-.b-body{display:flex;align-items:center;gap:14px;padding:12px 14px}
-.b-emoji{font-size:32px;width:40px;text-align:center;flex-shrink:0}
+.pills-spacer{height:10px;background:var(--noir)}
+/* ── Bottle card ── */
+.bottle-list{display:flex;flex-direction:column;gap:8px}
+.bottle-card{background:white;border:1px solid var(--ivory3);border-left:4px solid var(--gold);border-radius:3px;cursor:pointer;overflow:hidden}
+.b-body{display:flex;align-items:center;gap:12px;padding:10px 12px}
+.b-emoji{font-size:28px;width:36px;text-align:center;flex-shrink:0}
 .b-info{flex:1;min-width:0}
-.b-name{font-family:'Cormorant Garamond',serif;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.b-cat{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.b-name{font-family:'Cormorant Garamond',serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b-cat{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
 .b-right{text-align:right;flex-shrink:0}
-.b-qty{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:600}
-.b-qty-label{font-size:9px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase}
-.b-rating{display:flex;gap:1px;justify-content:flex-end;margin-top:4px}
-.star{font-size:10px;color:var(--ivory3)}
-.star.on{color:var(--gold)}
-.fab{position:fixed;right:18px;bottom:calc(var(--tab-h) + 14px);z-index:90;width:50px;height:50px;background:var(--noir);border:1px solid var(--gold);color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(184,146,58,.3);font-family:'Cormorant Garamond',serif}
+.b-qty{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-weight:600}
+.b-qty-label{font-size:8px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase}
+.b-rating{display:flex;gap:1px;justify-content:flex-end;margin-top:3px}
+.star{font-size:9px;color:var(--ivory3)}.star.on{color:var(--gold)}
+/* ── FAB ── */
+.fab{position:fixed;right:16px;bottom:calc(var(--tab-h) + 12px);z-index:90;width:46px;height:46px;background:var(--noir);border:1px solid var(--gold);color:var(--gold);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(184,146,58,.3);font-family:'Cormorant Garamond',serif}
 .fab:active{background:var(--gold);color:var(--noir)}
+/* ── Modal ── */
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,12,8,.78);display:none;align-items:flex-end;backdrop-filter:blur(3px)}
 .modal-overlay.open{display:flex}
-.modal{background:var(--ivory);border-top:2px solid var(--gold);width:100%;max-height:92dvh;overflow-y:auto;padding:10px 20px 40px;animation:slideUp .35s cubic-bezier(.22,1,.36,1)}
+.modal{background:var(--ivory);border-top:2px solid var(--gold);width:100%;max-height:92dvh;overflow-y:auto;padding:8px 18px 36px;animation:slideUp .3s cubic-bezier(.22,1,.36,1)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
-.modal-handle{width:36px;height:3px;background:var(--ivory3);margin:0 auto 16px;border-radius:2px}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--noir);margin-bottom:4px}
-.form-group{margin-bottom:14px}
-.form-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;display:block;font-weight:600}
-.form-input,.form-select,.form-textarea{width:100%;background:white;border:1px solid var(--ivory3);border-bottom:2px solid var(--ivory3);padding:10px 12px;color:var(--text);font-family:'Josefin Sans',sans-serif;font-size:14px;outline:none;appearance:none;border-radius:0}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-bottom-color:var(--gold)}
-.form-textarea{min-height:70px;resize:vertical}
-.form-row{display:flex;gap:10px}
-.form-row .form-group{flex:1}
-.star-input{display:flex;gap:6px;margin-top:4px}
-.star-inp{font-size:24px;cursor:pointer;color:var(--ivory3)}
-.star-inp.on{color:var(--gold)}
-.btn{width:100%;padding:13px;border:none;font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;margin-top:8px;border-radius:0}
-.btn-primary{background:var(--noir);color:var(--gold2)}
-.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(139,58,58,.3)}
-.btn-ghost{background:var(--ivory2);color:var(--text-muted)}
-.empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
-.empty .e-icon{font-size:44px;margin-bottom:12px;opacity:.5}
-.empty p{font-size:12px;letter-spacing:1px}
-.detail-photo{width:calc(100% + 40px);margin-left:-20px;margin-top:-10px;max-height:220px;object-fit:cover;border-bottom:2px solid var(--gold-border);display:block;margin-bottom:12px}
-.detail-hero{text-align:center;padding-top:16px}
-.detail-emoji-big{font-size:60px}
-.detail-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic}
-.detail-cat{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:4px}
-.detail-stars{display:flex;gap:3px;justify-content:center;margin:10px 0}
-.detail-star{font-size:18px;color:var(--ivory3)}
-.detail-star.on{color:var(--gold)}
-.info-grid{background:white;border:1px solid var(--ivory3);padding:14px;margin:12px 0}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--ivory3)}
+.modal-handle{width:32px;height:3px;background:var(--ivory3);margin:0 auto 14px;border-radius:2px}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;color:var(--noir);margin-bottom:4px}
+.deco-line{display:flex;align-items:center;gap:10px;margin:6px 0 12px}
+.deco-line::before,.deco-line::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent)}
+.deco-diamond{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+/* ── Form ── */
+.fg{margin-bottom:12px}
+.fl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;display:block;font-weight:600}
+.fi,.fs,.ft{width:100%;background:white;border:1px solid var(--ivory3);border-bottom:2px solid var(--ivory3);padding:9px 11px;color:var(--text);font-family:'Josefin Sans',sans-serif;font-size:13px;outline:none;appearance:none;border-radius:0}
+.fi:focus,.fs:focus,.ft:focus{border-bottom-color:var(--gold)}
+.ft{min-height:65px;resize:vertical}
+.frow{display:flex;gap:8px}.frow .fg{flex:1}
+.star-input{display:flex;gap:5px;margin-top:3px}
+.star-inp{font-size:22px;cursor:pointer;color:var(--ivory3)}.star-inp.on{color:var(--gold)}
+/* ── Buttons ── */
+.btn{width:100%;padding:12px;border:none;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;margin-top:7px;border-radius:0}
+.btn-p{background:var(--noir);color:var(--gold2)}
+.btn-d{background:transparent;color:var(--red);border:1px solid rgba(139,58,58,.3)}
+.btn-g{background:var(--ivory2);color:var(--text-muted)}
+/* ── Empty ── */
+.empty{text-align:center;padding:50px 20px;color:var(--text-muted)}
+.empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.empty p{font-size:11px;letter-spacing:1px}
+/* ── Detail modal ── */
+.detail-photo{width:calc(100% + 36px);margin-left:-18px;margin-top:-8px;max-height:300px;object-fit:contain;background:var(--ivory2);border-bottom:2px solid var(--gold-border);display:block;margin-bottom:10px}
+.dh{text-align:center;padding-top:12px}
+.dh .de{font-size:52px}
+.dh .dn{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic}
+.dh .dc{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:3px}
+.dh .ds{display:flex;gap:2px;justify-content:center;margin:8px 0}
+.dh .dst{font-size:16px;color:var(--ivory3)}.dh .dst.on{color:var(--gold)}
+.info-grid{background:white;border:1px solid var(--ivory3);padding:12px;margin:10px 0}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--ivory3)}
 .info-row:last-child{border:none}
-.info-key{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
-.info-val{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600}
-.qty-controls{display:flex;align-items:center;border:1px solid var(--ivory3);background:white;margin:12px 0}
-.qty-btn{flex:1;height:48px;font-size:24px;background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Cormorant Garamond',serif}
-.qty-val{padding:0 24px;font-family:'Cormorant Garamond',serif;font-size:28px;border-left:1px solid var(--ivory3);border-right:1px solid var(--ivory3)}
-.note-box{background:white;border:1px solid var(--ivory3);border-left:3px solid var(--gold);padding:12px 14px;font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--text-mid);line-height:1.6;margin:12px 0}
-.cocktail-card{background:white;border:1px solid var(--ivory3);border-radius:4px;padding:16px;margin-bottom:10px;cursor:pointer}
-.c-emoji{font-size:36px}
-.c-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic}
-.c-avail{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.ik{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.iv{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600}
+.qty-controls{display:flex;align-items:center;border:1px solid var(--ivory3);background:white;margin:10px 0}
+.qty-btn{flex:1;height:44px;font-size:22px;background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Cormorant Garamond',serif}
+.qty-val{padding:0 20px;font-family:'Cormorant Garamond',serif;font-size:26px;border-left:1px solid var(--ivory3);border-right:1px solid var(--ivory3)}
+.note-box{background:white;border:1px solid var(--ivory3);border-left:3px solid var(--gold);padding:10px 12px;font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--text-mid);line-height:1.6;margin:10px 0}
+/* ── Cocktails ── */
+.cocktail-card{background:white;border:1px solid var(--ivory3);border-radius:3px;padding:14px;margin-bottom:8px;cursor:pointer}
+.c-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic}
+.c-avail{font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
 .avail-yes{color:var(--green)}.avail-no{color:var(--text-muted)}.avail-partial{color:var(--gold)}
-.c-ingredients{margin-top:12px;border-top:1px solid var(--ivory3);padding-top:10px;display:flex;flex-direction:column;gap:5px}
-.c-ing{display:flex;align-items:center;gap:8px;font-size:13px}
-.dot-ok{background:var(--green)}.dot-no{background:var(--ivory3)}
-.tasting-card{background:white;border:1px solid var(--ivory3);padding:16px;margin-bottom:10px;border-radius:4px;cursor:pointer}
-.t-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic}
-.t-date{font-size:10px;color:var(--text-muted);letter-spacing:1px}
-.t-star{font-size:13px;color:var(--ivory3)}
-.t-star.on{color:var(--gold)}
-.t-note{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--text-mid);line-height:1.6;margin-top:6px}
-.stock-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.s-stat{background:var(--noir);padding:14px 10px;text-align:center}
-.s-stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold2)}
-.s-stat-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
-.stock-item{background:white;border:1px solid var(--ivory3);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.si-emoji{font-size:24px;width:32px;text-align:center;flex-shrink:0}
+.c-ings{margin-top:10px;border-top:1px solid var(--ivory3);padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.c-ing{display:flex;align-items:center;gap:7px;font-size:12px}
+/* ── Tasting ── */
+.tasting-card{background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:8px;border-radius:3px;cursor:pointer}
+.t-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic}
+.t-date{font-size:9px;color:var(--text-muted);letter-spacing:1px}
+.t-star{font-size:12px;color:var(--ivory3)}.t-star.on{color:var(--gold)}
+.t-note{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--text-mid);line-height:1.6;margin-top:6px}
+/* ── Stock ── */
+.stock-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.s-stat{background:var(--noir);padding:12px 8px;text-align:center}
+.s-stat-val{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold2)}
+.s-stat-label{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.stock-item{background:white;border:1px solid var(--ivory3);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.si-emoji{font-size:22px;width:28px;text-align:center;flex-shrink:0}
 .si-info{flex:1;min-width:0}
-.si-name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.si-cat{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
-.si-controls{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.si-btn{width:30px;height:30px;border:1px solid var(--ivory3);background:none;color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif}
-.si-qty{font-family:'Cormorant Garamond',serif;font-size:20px;min-width:28px;text-align:center}
-.leaflet-popup-content-wrapper{
-  background:var(--ivory);border:1px solid var(--gold-border);
-  color:var(--text);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.2);
-}
-.leaflet-popup-tip{ background:var(--ivory); }
-.leaflet-container{ font-family:'Josefin Sans',sans-serif; }
-.sec-head{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 10px;font-style:italic}
-
-/* Photo */
-.photo-zone{border:2px dashed var(--ivory3);background:white;display:flex;flex-direction:column;align-items:center;padding:18px 10px;gap:12px;position:relative}
-.photo-btns{display:flex;gap:10px;width:100%}
-.photo-btn{flex:1;position:relative;height:42px;border:1px solid var(--gold-border);background:var(--gold-dim);color:var(--text-mid);font-size:11px;letter-spacing:1px;font-family:'Josefin Sans',sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
-.photo-btn input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0;margin:0;padding:0}
-.photo-preview-wrap{position:relative;width:100%}
-.photo-preview-wrap img{width:100%;max-height:180px;object-fit:cover;display:block}
-.photo-actions{display:flex;border-top:1px solid var(--gold-border)}
-.photo-change{flex:1;position:relative;height:38px;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:1px;color:var(--text-mid);background:var(--gold-dim);cursor:pointer;overflow:hidden}
+.si-name{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-cat{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.si-controls{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.si-btn{width:28px;height:28px;border:1px solid var(--ivory3);background:none;color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif}
+.si-qty{font-family:'Cormorant Garamond',serif;font-size:18px;min-width:24px;text-align:center}
+.sec-head{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin:14px 0 8px;font-style:italic}
+/* ── Photo ── */
+.photo-zone{border:2px dashed var(--ivory3);background:white;display:flex;flex-direction:column;align-items:center;padding:16px 10px;gap:10px}
+.photo-btns{display:flex;gap:8px;width:100%}
+.photo-btn{flex:1;position:relative;height:40px;border:1px solid var(--gold-border);background:var(--gold-dim);color:var(--text-mid);font-size:10px;letter-spacing:1px;font-family:'Josefin Sans',sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+.photo-btn input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.photo-change{position:relative;height:36px;display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:1px;color:var(--text-mid);background:var(--gold-dim);cursor:pointer;overflow:hidden;flex:1;border-top:1px solid var(--gold-border)}
 .photo-change input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
-.photo-del{width:38px;height:38px;background:var(--red);color:white;border:none;font-size:16px;cursor:pointer;flex-shrink:0}
-.ai-status{margin-top:8px;padding:9px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;display:none;align-items:center;gap:8px;border-left:3px solid var(--gold);background:var(--gold-dim);color:var(--text-mid)}
-
-/* Config */
-.cfg-banner{background:var(--noir2);border:1px solid var(--gold-border);padding:14px;margin-bottom:14px;font-size:12px;color:var(--text-muted);line-height:1.7;border-radius:2px}
-.cfg-banner strong{color:var(--gold2);display:block;margin-bottom:4px;font-size:10px;letter-spacing:2px;text-transform:uppercase}
-.cfg-banner a{color:var(--gold);text-decoration:none}
-.cfg-input{width:100%;margin-top:8px;background:var(--noir3);border:1px solid var(--gold-border);padding:9px 10px;color:var(--ivory);font-family:'Josefin Sans',sans-serif;font-size:12px;outline:none;border-radius:0}
+.photo-del{width:36px;height:36px;background:var(--red);color:white;border:none;font-size:14px;cursor:pointer;flex-shrink:0;border-top:1px solid var(--gold-border)}
+.ai-status{margin-top:7px;padding:8px 11px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;display:none;align-items:center;gap:7px;border-left:3px solid var(--gold);background:var(--gold-dim);color:var(--text-mid)}
+/* ── Config ── */
+.cfg-banner{background:var(--noir2);border:1px solid var(--gold-border);padding:12px;margin-bottom:12px;font-size:11px;color:var(--text-muted);line-height:1.7;border-radius:2px}
+.cfg-banner strong{color:var(--gold2);display:block;margin-bottom:3px;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.cfg-banner a{color:var(--gold)}
+.cfg-input{width:100%;margin-top:7px;background:var(--noir3);border:1px solid var(--gold-border);padding:8px 10px;color:var(--ivory);font-family:'Josefin Sans',sans-serif;font-size:12px;outline:none;border-radius:0}
+/* ── Suggest ── */
+.suggest-btn{width:100%;padding:13px;background:var(--noir);border:1px solid var(--gold);color:var(--gold2);font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.suggest-status{padding:8px 11px;font-size:10px;letter-spacing:1px;text-transform:uppercase;display:none;align-items:center;gap:7px;border-left:3px solid var(--gold);background:var(--gold-dim);color:var(--text-mid);margin-bottom:12px}
+/* ── Map ── */
+.leaflet-popup-content-wrapper{background:var(--ivory);border:1px solid var(--gold-border);color:var(--text);border-radius:3px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.leaflet-popup-tip{background:var(--ivory)}
+.leaflet-container{font-family:'Josefin Sans',sans-serif}
 </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
   <div class="header-inner">
     <div class="logo">Mon Bar Privé<small>Collection Personnelle</small></div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <button onclick="openBackup()" style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:14px;width:32px;height:32px;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center" title="Sauvegarde">💾</button>
-      <button onclick="openSettings()" style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:14px;width:32px;height:32px;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center" title="Paramètres IA">⚙</button>
-      <div class="h-dots"><div class="h-dot"></div><div class="h-dot on"></div><div class="h-dot"></div></div>
+    <div style="display:flex;align-items:center;gap:7px">
+      <button class="hbtn" onclick="openBackup()" title="Sauvegarde">💾</button>
+      <button class="hbtn" onclick="openSettings()" title="Paramètres IA">⚙</button>
     </div>
   </div>
 </div>
@@ -179,9 +176,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   <div class="page-head">
     <div class="page-title">Bouteilles</div>
     <div class="page-sub">Ma collection</div>
-    <div class="search-wrap" style="padding:0 0 14px">
+    <div class="search-wrap" style="padding:0 0 12px">
       <div class="search-box">
-        <span style="color:var(--text-muted);font-size:14px">◎</span>
+        <span style="color:var(--text-muted);font-size:13px">◎</span>
         <input type="text" id="b-search" placeholder="Rechercher…" oninput="renderBottles()">
       </div>
     </div>
@@ -195,21 +192,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 <div class="page" id="page-cocktails">
   <div class="page-head"><div class="page-title">Cocktails</div><div class="page-sub">Ce que je peux préparer</div></div>
   <div class="content">
-    <!-- Bouton suggestion IA -->
-    <div style="margin-bottom:16px">
-      <button onclick="suggestCocktails()" id="suggest-btn"
-        style="width:100%;padding:14px;background:var(--noir);border:1px solid var(--gold);color:var(--gold2);
-        font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;
-        font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
-        ✦ Suggérer des cocktails avec mon stock
-      </button>
-      <div id="suggest-status" style="display:none;padding:9px 12px;font-size:11px;letter-spacing:1px;
-        text-transform:uppercase;border-left:3px solid var(--gold);background:var(--gold-dim);
-        color:var(--text-mid);align-items:center;gap:8px"></div>
-    </div>
-    <!-- Résultats IA -->
+    <button class="suggest-btn" onclick="suggestCocktails()">✦ Suggérer des cocktails avec mon stock</button>
+    <div class="suggest-status" id="suggest-status"></div>
     <div id="ai-cocktails"></div>
-    <!-- Cocktails manuels -->
     <div id="c-list"></div>
   </div>
 </div>
@@ -233,9 +218,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 <!-- PAGE CARTE -->
 <div class="page" id="page-map">
   <div class="page-head"><div class="page-title">Carte</div><div class="page-sub">Origines de ma collection</div></div>
-  <div id="map-container" style="position:relative;z-index:1;height:calc(100dvh - 130px)"></div>
+  <div id="map-container" style="height:calc(100dvh - 120px);position:relative;z-index:1"></div>
 </div>
 
+<!-- TABS -->
 <div class="tabs-bar">
   <div class="tab active" onclick="switchTab('bottles',this)"><span class="ti">🍾</span>Bouteilles</div>
   <div class="tab" onclick="switchTab('cocktails',this)"><span class="ti">🍸</span>Cocktails</div>
@@ -253,71 +239,56 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="modal-title" id="bm-title">Nouvelle bouteille</div>
     <div class="deco-line"><div class="deco-diamond"></div></div>
     <input type="hidden" id="bm-id">
-
     <div id="cfg-section" class="cfg-banner">
-      <strong>⚙ Configuration IA — une seule fois</strong>
-      Colle ta clé API Google Gemini (gratuite) pour activer l'analyse automatique.<br>
-      Ou appuie sur ⚙ en haut à droite pour configurer.
+      <strong>⚙ Configuration IA</strong>
+      Clé Google Gemini gratuite pour l'analyse photo. Ou configure via ⚙ en haut.
       <input class="cfg-input" type="password" id="cfg-apikey" placeholder="AIza..." oninput="saveConfig()">
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Photo de la bouteille</label>
+    <div class="fg">
+      <label class="fl">Photo de la bouteille</label>
       <div class="photo-zone" id="bm-photo-zone">
-        <div style="font-size:32px;opacity:.4">📷</div>
+        <div style="font-size:28px;opacity:.4">📷</div>
         <div class="photo-btns">
-          <div class="photo-btn">
-            <input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event)">
-            📸 Appareil
-          </div>
-          <div class="photo-btn">
-            <input type="file" accept="image/*" onchange="handlePhoto(event)">
-            🖼 Galerie
-          </div>
+          <div class="photo-btn"><input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event)">📸 Appareil</div>
+          <div class="photo-btn"><input type="file" accept="image/*" onchange="handlePhoto(event)">🖼 Galerie</div>
         </div>
       </div>
       <div class="ai-status" id="ai-status"></div>
     </div>
-
-    <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="bm-name" placeholder="ex: Hendrick's Gin"></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Catégorie</label>
-        <select class="form-select" id="bm-cat">
+    <div class="fg"><label class="fl">Nom</label><input class="fi" id="bm-name" placeholder="ex: Hendrick's Gin"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Catégorie</label>
+        <select class="fs" id="bm-cat">
           <option>Gin</option><option>Rhum</option><option>Whisky</option><option>Vodka</option>
           <option>Cognac</option><option>Tequila</option><option>Liqueur</option><option>Vermouth</option>
           <option>Bière</option><option>Vin</option><option>Champagne</option><option>Soft</option>
           <option>Sirop</option><option>Autre</option>
         </select>
       </div>
-      <div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="bm-emoji" placeholder="🍾" maxlength="2"></div>
+      <div class="fg" style="max-width:80px"><label class="fl">Emoji</label><input class="fi" id="bm-emoji" placeholder="🍾" maxlength="2"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Quantité</label><input class="form-input" id="bm-qty" type="number" min="0" placeholder="70"></div>
-      <div class="form-group"><label class="form-label">Unité</label>
-        <select class="form-select" id="bm-unit"><option>cl</option><option>ml</option><option>bouteille(s)</option><option>cannette(s)</option><option>dose(s)</option></select>
+    <div class="frow">
+      <div class="fg"><label class="fl">Quantité</label><input class="fi" id="bm-qty" type="number" min="0" placeholder="70"></div>
+      <div class="fg"><label class="fl">Unité</label>
+        <select class="fs" id="bm-unit"><option>cl</option><option>ml</option><option>bouteille(s)</option><option>cannette(s)</option><option>dose(s)</option></select>
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Nombre de bouteilles en stock</label>
-      <input class="form-input" id="bm-bottles" type="number" min="0" placeholder="ex: 3">
+    <div class="fg"><label class="fl">Nombre de bouteilles en stock</label><input class="fi" id="bm-bottles" type="number" min="0" placeholder="ex: 3"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Degré (%)</label><input class="fi" id="bm-abv" type="number" step="0.5" min="0" max="100" placeholder="40"></div>
+      <div class="fg"><label class="fl">Pays</label><input class="fi" id="bm-origin" placeholder="France"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Degré (%)</label><input class="form-input" id="bm-abv" type="number" step="0.5" min="0" max="100" placeholder="40"></div>
-      <div class="form-group"><label class="form-label">Pays</label><input class="form-input" id="bm-origin" placeholder="France"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Millésime / Année</label><input class="form-input" id="bm-vintage" type="number" min="1800" max="2100" placeholder="ex: 2018"></div>
-    <div class="form-group"><label class="form-label">Ma note</label>
+    <div class="fg"><label class="fl">Millésime / Année</label><input class="fi" id="bm-vintage" type="number" min="1800" max="2100" placeholder="ex: 2018"></div>
+    <div class="fg"><label class="fl">Ma note</label>
       <div class="star-input" id="bm-stars">
         <span class="star-inp" data-v="1">★</span><span class="star-inp" data-v="2">★</span>
         <span class="star-inp" data-v="3">★</span><span class="star-inp" data-v="4">★</span><span class="star-inp" data-v="5">★</span>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Notes de dégustation</label>
-      <textarea class="form-textarea" id="bm-note" placeholder="Arômes, saveurs, impressions…"></textarea>
-    </div>
-    <button class="btn btn-primary" onclick="saveBottle()">Enregistrer</button>
-    <button class="btn btn-danger" id="bm-delete" style="display:none" onclick="deleteBottle()">Supprimer cette bouteille</button>
-    <button class="btn btn-ghost" onclick="closeModal('bottle-modal')">Annuler</button>
+    <div class="fg"><label class="fl">Notes de dégustation</label><textarea class="ft" id="bm-note" placeholder="Arômes, saveurs…"></textarea></div>
+    <button class="btn btn-p" onclick="saveBottle()">Enregistrer</button>
+    <button class="btn btn-d" id="bm-delete" style="display:none" onclick="deleteBottle()">Supprimer cette bouteille</button>
+    <button class="btn btn-g" onclick="closeModal('bottle-modal')">Annuler</button>
   </div>
 </div>
 
@@ -326,30 +297,33 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   <div class="modal" id="detail-content"></div>
 </div>
 
-<!-- MODAL COCKTAIL -->
+<!-- MODAL COCKTAIL FORM -->
 <div class="modal-overlay" id="cocktail-modal" onclick="closeOnBg(event,'cocktail-modal')">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="cm-title">Nouveau cocktail</div>
     <div class="deco-line"><div class="deco-diamond"></div></div>
     <input type="hidden" id="cm-id">
-    <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="cm-name" placeholder="ex: Negroni"></div>
-    <div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="cm-emoji" placeholder="🍸" maxlength="2" style="width:80px"></div>
-    <div class="form-group"><label class="form-label">Ingrédients (un par ligne : Nom | quantité)</label>
-      <textarea class="form-textarea" id="cm-ings" placeholder="Gin | 4 cl&#10;Vermouth | 3 cl" style="min-height:90px"></textarea>
+    <div class="fg"><label class="fl">Nom</label><input class="fi" id="cm-name" placeholder="ex: Negroni"></div>
+    <div class="fg" style="width:80px"><label class="fl">Emoji</label><input class="fi" id="cm-emoji" placeholder="🍸" maxlength="2"></div>
+    <div class="fg"><label class="fl">Ingrédients (Nom | quantité, un par ligne)</label>
+      <textarea class="ft" id="cm-ings" style="min-height:80px" placeholder="Gin | 4 cl&#10;Vermouth | 3 cl"></textarea>
     </div>
-    <div class="form-group"><label class="form-label">Préparation</label>
-      <textarea class="form-textarea" id="cm-prep" placeholder="Mélanger avec des glaçons…"></textarea>
-    </div>
-    <button class="btn btn-primary" onclick="saveCocktail()">Enregistrer</button>
-    <button class="btn btn-danger" id="cm-delete" style="display:none" onclick="deleteCocktail()">Supprimer</button>
-    <button class="btn btn-ghost" onclick="closeModal('cocktail-modal')">Annuler</button>
+    <div class="fg"><label class="fl">Préparation</label><textarea class="ft" id="cm-prep" placeholder="Mélanger avec des glaçons…"></textarea></div>
+    <button class="btn btn-p" onclick="saveCocktail()">Enregistrer</button>
+    <button class="btn btn-d" id="cm-delete" style="display:none" onclick="deleteCocktail()">Supprimer</button>
+    <button class="btn btn-g" onclick="closeModal('cocktail-modal')">Annuler</button>
   </div>
 </div>
 
 <!-- MODAL COCKTAIL DÉTAIL -->
 <div class="modal-overlay" id="cocktail-detail-modal" onclick="closeOnBg(event,'cocktail-detail-modal')">
   <div class="modal" id="cocktail-detail-content"></div>
+</div>
+
+<!-- MODAL RECETTE IA -->
+<div class="modal-overlay" id="ai-recipe-modal" onclick="closeOnBg(event,'ai-recipe-modal')">
+  <div class="modal" id="ai-recipe-content"></div>
 </div>
 
 <!-- MODAL DÉGUSTATION -->
@@ -359,19 +333,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="modal-title">Note de dégustation</div>
     <div class="deco-line"><div class="deco-diamond"></div></div>
     <input type="hidden" id="tm-id">
-    <div class="form-group"><label class="form-label">Bouteille</label><select class="form-select" id="tm-bottle"></select></div>
-    <div class="form-group"><label class="form-label">Note</label>
+    <div class="fg"><label class="fl">Bouteille</label><select class="fs" id="tm-bottle"></select></div>
+    <div class="fg"><label class="fl">Note</label>
       <div class="star-input" id="tm-stars">
         <span class="star-inp" data-v="1">★</span><span class="star-inp" data-v="2">★</span>
         <span class="star-inp" data-v="3">★</span><span class="star-inp" data-v="4">★</span><span class="star-inp" data-v="5">★</span>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Impressions</label>
-      <textarea class="form-textarea" id="tm-note" placeholder="Arômes, saveurs, longueur en bouche…"></textarea>
-    </div>
-    <button class="btn btn-primary" onclick="saveTasting()">Enregistrer</button>
-    <button class="btn btn-danger" id="tm-delete" style="display:none" onclick="deleteTasting()">Supprimer</button>
-    <button class="btn btn-ghost" onclick="closeModal('tasting-modal')">Annuler</button>
+    <div class="fg"><label class="fl">Impressions</label><textarea class="ft" id="tm-note" placeholder="Arômes, saveurs…"></textarea></div>
+    <button class="btn btn-p" onclick="saveTasting()">Enregistrer</button>
+    <button class="btn btn-d" id="tm-delete" style="display:none" onclick="deleteTasting()">Supprimer</button>
+    <button class="btn btn-g" onclick="closeModal('tasting-modal')">Annuler</button>
   </div>
 </div>
 
@@ -381,428 +353,194 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="modal-handle"></div>
     <div class="modal-title">Sauvegarde</div>
     <div class="deco-line"><div class="deco-diamond"></div></div>
-    <div style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-bottom:16px">
-      Exporte ou restaure toutes tes données (bouteilles, cocktails, notes).
+    <div id="backup-info" style="background:var(--noir2);border:1px solid var(--gold-border);padding:12px;font-size:11px;color:var(--text-muted);line-height:2;margin-bottom:12px"></div>
+    <div style="background:white;border:1px solid var(--ivory3);padding:13px;margin-bottom:8px">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-weight:600">📤 Exporter</div>
+      <button class="btn btn-p" onclick="exportData()" style="margin-top:0">⬇ Télécharger la sauvegarde</button>
     </div>
-    <!-- Stats -->
-    <div id="backup-info" style="background:var(--noir2);border:1px solid var(--gold-border);padding:12px 14px;font-size:12px;color:var(--text-muted);line-height:2;margin-bottom:14px"></div>
-    <!-- Export -->
-    <div style="background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:10px">
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-weight:600">📤 Exporter</div>
-      <div style="font-size:12px;color:var(--text-mid);margin-bottom:10px;line-height:1.6">Télécharge un fichier JSON avec toutes tes données.</div>
-      <button class="btn btn-primary" onclick="exportData()" style="margin-top:0">⬇ Télécharger la sauvegarde</button>
-    </div>
-    <!-- Import -->
-    <div style="background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:10px">
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-weight:600">📥 Importer</div>
-      <div style="font-size:12px;color:var(--text-mid);margin-bottom:10px;line-height:1.6">Restaure une sauvegarde. <strong style="color:var(--red)">Remplace toutes les données actuelles.</strong></div>
-      <div class="photo-btn" style="height:44px;border:1px solid var(--ivory3);background:var(--ivory2);color:var(--text-muted);font-size:12px;letter-spacing:1px">
+    <div style="background:white;border:1px solid var(--ivory3);padding:13px;margin-bottom:8px">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-weight:600">📥 Importer</div>
+      <div style="font-size:11px;color:var(--text-mid);margin-bottom:8px">Restaure une sauvegarde. <strong style="color:var(--red)">Attention : remplace les données sans photo.</strong></div>
+      <div class="photo-btn" style="height:42px;border:1px solid var(--ivory3);background:var(--ivory2);color:var(--text-muted);font-size:11px">
         <input type="file" accept=".json" onchange="importData(event)">
         ⬆ Choisir un fichier .json
       </div>
     </div>
-    <div id="backup-status" style="display:none;padding:9px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px"></div>
-    <button class="btn btn-ghost" onclick="closeModal('backup-modal')">Fermer</button>
+    <div id="backup-status" style="display:none;padding:8px 11px;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px"></div>
+    <button class="btn btn-g" onclick="closeModal('backup-modal')">Fermer</button>
+  </div>
+</div>
+
+<!-- MODAL PARAMÈTRES IA -->
+<div class="modal-overlay" id="settings-modal" onclick="closeOnBg(event,'settings-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Paramètres IA</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div style="background:white;border:1px solid var(--ivory3);padding:13px;margin-bottom:8px">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:6px">📷 Analyse photo — Google Gemini</div>
+      <div style="font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:7px">Gratuit sur <a href="https://aistudio.google.com" target="_blank" style="color:var(--gold)">aistudio.google.com</a> → Get API Key</div>
+      <input class="fi" id="s-apikey" placeholder="AIza..." type="password" autocomplete="off">
+    </div>
+    <div style="background:white;border:1px solid var(--ivory3);padding:13px;margin-bottom:12px">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:6px">🍸 Suggestions cocktails — Groq</div>
+      <div style="font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:7px">Gratuit sur <a href="https://console.groq.com" target="_blank" style="color:var(--gold)">console.groq.com</a> → API Keys</div>
+      <input class="fi" id="s-groqkey" placeholder="gsk_..." type="password" autocomplete="off">
+    </div>
+    <div id="s-status" style="display:none;padding:8px 11px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border-left:3px solid var(--green);background:rgba(58,107,74,.1);color:var(--green);margin-bottom:7px">✦ Paramètres sauvegardés</div>
+    <button class="btn btn-p" onclick="saveSettings()">💾 Enregistrer</button>
+    <button class="btn btn-d" onclick="clearSettings()">Effacer les clés</button>
+    <button class="btn btn-g" onclick="listModels()" style="margin-top:5px">🔍 Modèles Gemini disponibles</button>
+    <div id="models-list" style="display:none;margin-top:8px;font-size:10px;color:var(--text-muted);background:var(--noir3);padding:10px;line-height:1.8;word-break:break-all"></div>
+    <button class="btn btn-g" onclick="closeModal('settings-modal')">Fermer</button>
   </div>
 </div>
 
 <script>
+// ══ CONSTANTES ════════════════════════════════════════
 const LS={B:'bar_bottles_v1',C:'bar_cocktails_v1',T:'bar_tastings_v1'};
-let CFG={apikey:'', groqkey:''};
-let bottles=[],cocktails=[],tastings=[];
 const CATS=['Gin','Rhum','Whisky','Vodka','Cognac','Tequila','Liqueur','Vermouth','Bière','Vin','Champagne','Soft','Sirop','Autre'];
 const CAT_EMOJI={Gin:'🌿',Rhum:'🍬',Whisky:'🥃',Vodka:'❄️',Cognac:'🍂',Tequila:'🌵',Liqueur:'🍯',Vermouth:'🍷',Bière:'🍺',Vin:'🍷',Champagne:'🥂',Soft:'💧',Sirop:'🫙',Autre:'🍶'};
+const COUNTRY_ISO={
+  'czech republic':'CZ','tchéquie':'CZ','république tchèque':'CZ','republique tcheque':'CZ',
+  'malta':'MT','malte':'MT',
+  'cape verde':'CV','cap-vert':'CV','cap vert':'CV','cabo verde':'CV',
+  'saint martin':'MF','st martin':'MF','st-martin':'MF','saint-martin':'MF',
+  'dominican republic':'DO','république dominicaine':'DO','republique dominicaine':'DO','santo domingo':'DO',
+  'réunion':'RE','reunion':'RE','la réunion':'RE','la reunion':'RE',
+  'france':'FR','écosse':'GB-SCT','scotland':'GB-SCT','ireland':'IE','irlande':'IE',
+  'italy':'IT','italie':'IT','spain':'ES','espagne':'ES','portugal':'PT',
+  'germany':'DE','allemagne':'DE','belgium':'BE','belgique':'BE',
+  'netherlands':'NL','pays-bas':'NL','russia':'RU','russie':'RU',
+  'sweden':'SE','suède':'SE','norway':'NO','norvège':'NO',
+  'finland':'FI','finlande':'FI','denmark':'DK','danemark':'DK',
+  'switzerland':'CH','suisse':'CH','austria':'AT','autriche':'AT',
+  'greece':'GR','grèce':'GR','turkey':'TR','turquie':'TR',
+  'usa':'US','united states':'US','états-unis':'US','america':'US',
+  'canada':'CA','mexico':'MX','mexique':'MX','cuba':'CU',
+  'jamaica':'JM','jamaïque':'JM','puerto rico':'PR','porto rico':'PR',
+  'barbados':'BB','barbade':'BB','martinique':'MQ','guadeloupe':'GP',
+  'brazil':'BR','brésil':'BR','colombia':'CO','colombie':'CO',
+  'venezuela':'VE','peru':'PE','pérou':'PE','chile':'CL','chili':'CL',
+  'argentina':'AR','argentine':'AR','uruguay':'UY',
+  'japan':'JP','japon':'JP','china':'CN','chine':'CN',
+  'south korea':'KR','korea':'KR','corée':'KR',
+  'india':'IN','inde':'IN','thailand':'TH','thaïlande':'TH',
+  'vietnam':'VN','taiwan':'TW','singapore':'SG','singapour':'SG',
+  'philippines':'PH','indonesia':'ID','indonésie':'ID',
+  'australia':'AU','australie':'AU','new zealand':'NZ','nouvelle-zélande':'NZ',
+  'south africa':'ZA','afrique du sud':'ZA','morocco':'MA','maroc':'MA',
+  'lebanon':'LB','liban':'LB','armenia':'AM','arménie':'AM',
+  'georgia':'GE','géorgie':'GE','ukraine':'UA','poland':'PL','pologne':'PL',
+  'czech republic':'CZ','tchéquie':'CZ','hungary':'HU','hongrie':'HU',
+  'romania':'RO','roumanie':'RO','trinidad':'TT','haiti':'HT','haïti':'HT',
+  'nicaragua':'NI','guatemala':'GT','costa rica':'CR','panama':'PA',
+  'egypt':'EG','égypte':'EG','tunisia':'TN','tunisie':'TN','algeria':'DZ','algérie':'DZ',
+};
 
-// ── Carte ─────────────────────────────────────────────
-let _map = null;
-let _mapMarkers = [];
-let _geocodeCache = {};
-
-function findCountryKey(origin){ return origin?.toLowerCase().trim()||null; }
-
-async function geocodeCountry(country){
-  const key = country.toLowerCase().trim();
-  if(_geocodeCache[key]) return _geocodeCache[key];
-  try{
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(country)}&featuretype=country&limit=1&format=json`,
-      {headers:{'Accept-Language':'fr'}});
-    const data = await res.json();
-    if(data.length){
-      const coords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-      _geocodeCache[key] = coords;
-      return coords;
-    }
-  } catch(e){ console.warn('Geocode failed for', country, e); }
-  return null;
-}
-
-function countryToFlag(country){
-  // Convertit un nom de pays en emoji drapeau via code ISO
-  const map = {
-    'france':'FR','écosse':'GB','scotland':'GB','scotland':'GB',
-    'ireland':'IE','irlande':'IE',
-    'italy':'IT','italie':'IT',
-    'spain':'ES','espagne':'ES',
-    'portugal':'PT',
-    'germany':'DE','allemagne':'DE',
-    'belgium':'BE','belgique':'BE',
-    'netherlands':'NL','pays-bas':'NL',
-    'russia':'RU','russie':'RU',
-    'poland':'PL','pologne':'PL',
-    'sweden':'SE','suède':'SE',
-    'norway':'NO','norvège':'NO',
-    'finland':'FI','finlande':'FI',
-    'greece':'GR','grèce':'GR',
-    'turkey':'TR','turquie':'TR',
-    'united states':'US','usa':'US','états-unis':'US','us':'US',
-    'canada':'CA',
-    'mexico':'MX','mexique':'MX',
-    'cuba':'CU',
-    'jamaica':'JM','jamaïque':'JM',
-    'puerto rico':'PR','porto rico':'PR',
-    'barbados':'BB','barbade':'BB',
-    'martinique':'MQ','guadeloupe':'GP',
-    'brazil':'BR','brésil':'BR',
-    'colombia':'CO','colombie':'CO',
-    'venezuela':'VE',
-    'peru':'PE','pérou':'PE',
-    'chile':'CL','chili':'CL',
-    'argentina':'AR','argentine':'AR',
-    'japan':'JP','japon':'JP',
-    'china':'CN','chine':'CN',
-    'south korea':'KR','korea':'KR','corée':'KR',
-    'india':'IN','inde':'IN',
-    'australia':'AU','australie':'AU',
-    'new zealand':'NZ','nouvelle-zélande':'NZ',
-    'south africa':'ZA','afrique du sud':'ZA',
-    'morocco':'MA','maroc':'MA',
-    'lebanon':'LB','liban':'LB',
-    'armenia':'AM','arménie':'AM',
-    'georgia':'GE','géorgie':'GE',
-    'sweden':'SE','denmark':'DK','danemark':'DK',
-    'austria':'AT','autriche':'AT',
-    'switzerland':'CH','suisse':'CH',
-    'czech republic':'CZ','tchéquie':'CZ',
-    'hungary':'HU','hongrie':'HU',
-    'romania':'RO','roumanie':'RO',
-    'ukraine':'UA',
-    'taiwan':'TW','taïwan':'TW',
-    'thailand':'TH','thaïlande':'TH',
-    'vietnam':'VN','viêt nam':'VN',
-    'philippines':'PH',
-    'indonesia':'ID','indonésie':'ID',
-    'singapore':'SG','singapour':'SG',
-    'malaysia':'MY','malaisie':'MY',
-    'trinidad':'TT','trinidad and tobago':'TT',
-    'haiti':'HT','haïti':'HT',
-    'nicaragua':'NI','guatemala':'GT',
-    'el salvador':'SV','costa rica':'CR',
-    'panama':'PA',
-    'bolivia':'BO','bolivie':'BO',
-    'ecuador':'EC','équateur':'EC',
-    'uruguay':'UY',
-    'paraguay':'PY',
-    'nigeria':'NG',
-    'kenya':'KE',
-    'ethiopia':'ET','éthiopie':'ET',
-    'egypt':'EG','égypte':'EG',
-    'tunisia':'TN','tunisie':'TN',
-    'algeria':'DZ','algérie':'DZ',
-  };
-  const iso = map[country.toLowerCase().trim()];
+function isoToFlag(iso){
   if(!iso) return '🍾';
-  // Convertit code ISO en emoji drapeau
-  return iso.split('').map(c=>String.fromCodePoint(c.charCodeAt(0)+127397)).join('');
+  const code = iso.slice(0,2).toUpperCase();
+  return code.split('').map(c=>String.fromCodePoint(c.charCodeAt(0)+127397)).join('');
+}
+function countryToFlag(name){
+  const iso = COUNTRY_ISO[name.toLowerCase().trim()];
+  return iso ? isoToFlag(iso) : '🍾';
 }
 
-async function renderMap(){
+// ══ DATA ══════════════════════════════════════════════
+let bottles=[], cocktails=[], tastings=[], CFG={apikey:'',groqkey:''};
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+function loadData(){
+  try{bottles=JSON.parse(localStorage.getItem(LS.B))||[];}catch{bottles=[];}
+  try{cocktails=JSON.parse(localStorage.getItem(LS.C))||[];}catch{cocktails=[];}
+  try{tastings=JSON.parse(localStorage.getItem(LS.T))||[];}catch{tastings=[];}
+  if(!bottles.length) seedBottles();
+  if(!cocktails.length) seedCocktails();
+}
+function saveB(){
   try{
-    if(typeof L === 'undefined'){ console.warn('Leaflet non chargé'); return; }
-    const container = document.getElementById('map-container');
-    if(!container) return;
-
-    if(!_map){
-      _map = L.map('map-container',{center:[20,10],zoom:2,zoomControl:true,attributionControl:false});
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(_map);
-    }
-    _mapMarkers.forEach(m=>_map.removeLayer(m));
-    _mapMarkers=[];
-
-    const byCountry={};
-    bottles.forEach(b=>{
-      if(!b.origin) return;
-      const key=b.origin.trim();
-      if(!byCountry[key]) byCountry[key]=[];
-      byCountry[key].push(b);
-    });
-
-    const promises = Object.entries(byCountry).map(async([country, bots])=>{
-      try{
-        const coords = await geocodeCountry(country);
-        if(!coords) return;
-        const flag = countryToFlag(country);
-        const names = bots.map(b=>`<div style="padding:3px 0;border-bottom:1px solid rgba(0,0,0,.08);font-size:12px">${b.emoji||'🍾'} ${b.name}</div>`).join('');
-        const icon = L.divIcon({
-          html:`<div style="font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))">${flag}</div>`,
-          className:'',iconSize:[36,36],iconAnchor:[18,18]
-        });
-        const marker = L.marker(coords,{icon})
-          .bindPopup(`
-            <div style="font-family:'Josefin Sans',sans-serif;min-width:160px">
-              <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#b8923a;margin-bottom:8px;font-weight:600">${flag} ${country}</div>
-              ${names}
-              <div style="font-size:10px;color:#9a8c78;margin-top:6px;letter-spacing:1px">${bots.length} bouteille${bots.length>1?'s':''}</div>
-            </div>`)
-          .addTo(_map);
-        _mapMarkers.push(marker);
-      } catch(e){ console.warn('Marqueur échoué pour', country, e); }
-    });
-
-    await Promise.all(promises);
-
-    if(_mapMarkers.length){
-      const group=L.featureGroup(_mapMarkers);
-      _map.fitBounds(group.getBounds().pad(0.3));
-    }
-    setTimeout(()=>_map.invalidateSize(),200);
-  } catch(e){ console.error('renderMap error:', e); }
+    const noPhoto=bottles.map(b=>({...b,photo:null}));
+    localStorage.setItem(LS.B,JSON.stringify(noPhoto));
+  }catch(e){alert('Stockage plein ! Fais une sauvegarde 💾');}
 }
-  'france':[46.2,2.2],'écosse':[56.8,-4.2],'scotland':[56.8,-4.2],
-  'irlande':[53.1,-7.7],'ireland':[53.1,-7.7],
-  'angleterre':[52.4,-1.5],'england':[52.4,-1.5],
-  'royaume-uni':[55.4,-3.4],'uk':[55.4,-3.4],
-  'italie':[42.5,12.5],'italy':[42.5,12.5],
-  'espagne':[40.4,-3.7],'spain':[40.4,-3.7],
-  'portugal':[39.5,-8.0],
-  'allemagne':[51.2,10.4],'germany':[51.2,10.4],
-  'belgique':[50.5,4.5],'belgium':[50.5,4.5],
-  'pays-bas':[52.1,5.3],'netherlands':[52.1,5.3],
-  'russie':[61.5,90],'russia':[61.5,90],
-  'pologne':[52.0,19.1],'poland':[52.0,19.1],
-  'suède':[62.0,15.0],'sweden':[62.0,15.0],
-  'norvège':[64.5,15.5],'norway':[64.5,15.5],
-  'finlande':[64.0,25.7],'finland':[64.0,25.7],
-  'grèce':[39.0,22.0],'greece':[39.0,22.0],
-  'turquie':[39.0,35.0],'turkey':[39.0,35.0],
-  'usa':[37.1,-95.7],'états-unis':[37.1,-95.7],'united states':[37.1,-95.7],
-  'canada':[56.1,-106.3],
-  'mexique':[23.6,-102.5],'mexico':[23.6,-102.5],
-  'cuba':[22.0,-79.5],
-  'jamaïque':[18.1,-77.3],'jamaica':[18.1,-77.3],
-  'porto rico':[18.2,-66.5],'puerto rico':[18.2,-66.5],
-  'barbade':[13.2,-59.6],'barbados':[13.2,-59.6],
-  'martinique':[14.6,-61.0],
-  'guadeloupe':[16.3,-61.4],
-  'brésil':[[-14.2,-51.9]],'brazil':[-14.2,-51.9],
-  'colombie':[ 4.6,-74.1],'colombia':[4.6,-74.1],
-  'venezuela':[8.0,-66.2],
-  'pérou':[-9.2,-75.0],'peru':[-9.2,-75.0],
-  'chili':[-30.0,-71.0],'chile':[-30.0,-71.0],
-  'argentine':[-38.4,-63.6],'argentina':[-38.4,-63.6],
-  'japon':[36.2,138.3],'japan':[36.2,138.3],
-  'chine':[35.9,104.2],'china':[35.9,104.2],
-  'corée':[35.9,127.8],'korea':[35.9,127.8],
-  'inde':[20.6,78.9],'india':[20.6,78.9],
-  'australie':[-25.3,133.8],'australia':[-25.3,133.8],
-  'nouvelle-zélande':[-40.9,174.9],'new zealand':[-40.9,174.9],
-  'afrique du sud':[-28.5,24.7],'south africa':[-28.5,24.7],
-  'maroc':[31.8,-7.1],'morocco':[31.8,-7.1],
-  'liban':[33.9,35.5],'lebanon':[33.9,35.5],
-  'arménie':[40.1,45.0],'armenia':[40.1,45.0],
-  'géorgie':[42.3,43.4],'georgia (country)':[42.3,43.4],
-};
+function saveC(){localStorage.setItem(LS.C,JSON.stringify(cocktails));}
+function saveT(){localStorage.setItem(LS.T,JSON.stringify(tastings));}
 
-// Drapeaux emoji par pays
-const COUNTRY_FLAGS = {
-  'france':'🇫🇷','écosse':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-  'irlande':'🇮🇪','ireland':'🇮🇪',
-  'angleterre':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','england':'🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-  'royaume-uni':'🇬🇧','uk':'🇬🇧',
-  'italie':'🇮🇹','italy':'🇮🇹',
-  'espagne':'🇪🇸','spain':'🇪🇸',
-  'portugal':'🇵🇹',
-  'allemagne':'🇩🇪','germany':'🇩🇪',
-  'belgique':'🇧🇪','belgium':'🇧🇪',
-  'pays-bas':'🇳🇱','netherlands':'🇳🇱',
-  'russie':'🇷🇺','russia':'🇷🇺',
-  'pologne':'🇵🇱','poland':'🇵🇱',
-  'suède':'🇸🇪','sweden':'🇸🇪',
-  'norvège':'🇳🇴','norway':'🇳🇴',
-  'finlande':'🇫🇮','finland':'🇫🇮',
-  'grèce':'🇬🇷','greece':'🇬🇷',
-  'turquie':'🇹🇷','turkey':'🇹🇷',
-  'usa':'🇺🇸','états-unis':'🇺🇸','united states':'🇺🇸',
-  'canada':'🇨🇦',
-  'mexique':'🇲🇽','mexico':'🇲🇽',
-  'cuba':'🇨🇺',
-  'jamaïque':'🇯🇲','jamaica':'🇯🇲',
-  'porto rico':'🇵🇷','puerto rico':'🇵🇷',
-  'barbade':'🇧🇧','barbados':'🇧🇧',
-  'martinique':'🇲🇶','guadeloupe':'🇬🇵',
-  'brésil':'🇧🇷','brazil':'🇧🇷',
-  'colombie':'🇨🇴','colombia':'🇨🇴',
-  'venezuela':'🇻🇪','pérou':'🇵🇪','peru':'🇵🇪',
-  'chili':'🇨🇱','chile':'🇨🇱',
-  'argentine':'🇦🇷','argentina':'🇦🇷',
-  'japon':'🇯🇵','japan':'🇯🇵',
-  'chine':'🇨🇳','china':'🇨🇳',
-  'corée':'🇰🇷','korea':'🇰🇷',
-  'inde':'🇮🇳','india':'🇮🇳',
-  'australie':'🇦🇺','australia':'🇦🇺',
-  'nouvelle-zélande':'🇳🇿','new zealand':'🇳🇿',
-  'afrique du sud':'🇿🇦','south africa':'🇿🇦',
-  'maroc':'🇲🇦','morocco':'🇲🇦',
-  'liban':'🇱🇧','lebanon':'🇱🇧',
-  'arménie':'🇦🇲','armenia':'🇦🇲',
-  'géorgie':'🇬🇪',
-};
-
-function findCountryKey(origin){
-  if(!origin) return null;
-  const raw = origin.toLowerCase().trim();
-  // Correspondance exacte
-  if(COUNTRY_COORDS[raw]) return raw;
-  // Correspondance partielle — le pays saisi contient une clé connue ou vice versa
-  for(const key of Object.keys(COUNTRY_COORDS)){
-    if(raw.includes(key) || key.includes(raw)) return key;
-  }
-  return null;
+function seedBottles(){
+  bottles=[
+    {id:uid(),name:"Hendrick's Gin",cat:'Gin',emoji:'🌿',qty:70,unit:'cl',bottles:1,abv:41.4,origin:'Scotland',vintage:null,stars:5,note:'Floral et concombre',photo:null},
+    {id:uid(),name:'Bacardi Carta Blanca',cat:'Rhum',emoji:'🍬',qty:1,unit:'bouteille(s)',bottles:1,abv:37.5,origin:'Puerto Rico',vintage:null,stars:3,note:'Léger, idéal cocktails',photo:null},
+    {id:uid(),name:'Martini Rosso',cat:'Vermouth',emoji:'🍷',qty:50,unit:'cl',bottles:1,abv:15,origin:'Italy',vintage:null,stars:4,note:'Herbacé et sucré',photo:null},
+    {id:uid(),name:'Campari',cat:'Liqueur',emoji:'🔴',qty:1,unit:'bouteille(s)',bottles:1,abv:25,origin:'Italy',vintage:null,stars:4,note:"Amer, notes d'orange",photo:null},
+    {id:uid(),name:'Cointreau',cat:'Liqueur',emoji:'🍊',qty:30,unit:'cl',bottles:1,abv:40,origin:'France',vintage:null,stars:4,note:'Orange délicate',photo:null},
+  ];saveB();
+}
+function seedCocktails(){
+  cocktails=[
+    {id:uid(),name:'Negroni',emoji:'🍊',ingredients:[{name:'Gin',qty:'3 cl'},{name:'Campari',qty:'3 cl'},{name:'Vermouth',qty:'3 cl'}],prep:"Mélanger avec glaçons. Zeste d'orange."},
+    {id:uid(),name:'Mojito',emoji:'🌿',ingredients:[{name:'Rhum',qty:'5 cl'},{name:'Citron vert',qty:'2 cl'},{name:'Sirop de canne',qty:'2 cl'},{name:'Menthe',qty:'quelques feuilles'}],prep:"Piler menthe, rhum, glace pilée."},
+    {id:uid(),name:'Gin Tonic',emoji:'🫧',ingredients:[{name:'Gin',qty:'5 cl'},{name:'Tonic',qty:'15 cl'}],prep:"Glaçons, gin, tonic. Citron vert."},
+  ];saveC();
 }
 
-function renderMap(){
-  const container = document.getElementById('map-container');
-
-  // Init carte une seule fois
-  if(!_map){
-    _map = L.map('map-container', {
-      center:[20,10], zoom:2,
-      zoomControl:true,
-      attributionControl:false
-    });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      maxZoom:18
-    }).addTo(_map);
-  }
-
-  // Supprime les anciens marqueurs
-  _mapMarkers.forEach(m=>_map.removeLayer(m));
-  _mapMarkers=[];
-
-  // Regroupe les bouteilles par pays
-  const byCountry = {};
-  bottles.forEach(b=>{
-    if(!b.origin) return;
-    const key = findCountryKey(b.origin);
-    if(!key) return;
-    if(!byCountry[key]) byCountry[key]=[];
-    byCountry[key].push(b);
+// ══ IndexedDB photos ══════════════════════════════════
+let _db=null;
+function initDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open('monbar_photos',1);
+    r.onupgradeneeded=e=>e.target.result.createObjectStore('photos',{keyPath:'id'});
+    r.onsuccess=e=>{_db=e.target.result;res();}
+    r.onerror=()=>res();
   });
-
-function openBackup(){
-  const el=document.getElementById('backup-info');
-  const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  el.innerHTML=`
-    🍾 <strong style="color:var(--gold2)">${bottles.length}</strong> bouteille${bottles.length>1?'s':''}<br>
-    🍸 <strong style="color:var(--gold2)">${cocktails.length}</strong> cocktail${cocktails.length>1?'s':''}<br>
-    📝 <strong style="color:var(--gold2)">${tastings.length}</strong> note${tastings.length>1?'s'  :''} de dégustation<br>
-    🕐 Dernière mise à jour : ${date}`;
-  document.getElementById('backup-status').style.display='none';
-  openModal('backup-modal');
+}
+function dbSavePhoto(id,data){
+  if(!_db||!data) return Promise.resolve();
+  return new Promise(res=>{
+    const tx=_db.transaction('photos','readwrite');
+    tx.objectStore('photos').put({id,data});
+    tx.oncomplete=res;tx.onerror=res;
+  });
+}
+function dbDeletePhoto(id){
+  if(!_db) return Promise.resolve();
+  return new Promise(res=>{
+    const tx=_db.transaction('photos','readwrite');
+    tx.objectStore('photos').delete(id);
+    tx.oncomplete=res;tx.onerror=res;
+  });
+}
+function dbLoadAllPhotos(){
+  if(!_db) return Promise.resolve({});
+  return new Promise(res=>{
+    const tx=_db.transaction('photos','readonly');
+    const r=tx.objectStore('photos').getAll();
+    r.onsuccess=e=>{const m={};(e.target.result||[]).forEach(p=>m[p.id]=p.data);res(m);}
+    r.onerror=()=>res({});
+  });
 }
 
-async function exportData(){
-  const photos = await loadAllPhotos();
-  const bottlesWithPhotos = bottles.map(b=>({...b, photo: photos[b.id]||b.photo||null}));
-  const data={version:2,date:new Date().toISOString(),bottles:bottlesWithPhotos,cocktails,tastings};
-  const json=JSON.stringify(data,null,2);
-  const blob=new Blob([json],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  const dateStr=new Date().toISOString().slice(0,10);
-  a.href=url; a.download=`monbar-sauvegarde-${dateStr}.json`;
-  a.click(); URL.revokeObjectURL(url);
-  showBackupStatus('Sauvegarde téléchargée !','ok');
+// ══ INIT ══════════════════════════════════════════════
+async function init(){
+  try{ await initDB(); }catch(e){}
+  loadData();
+  // Charge les photos
+  try{
+    const photos=await dbLoadAllPhotos();
+    bottles.forEach(b=>{if(photos[b.id])b.photo=photos[b.id];});
+  }catch(e){}
+  loadConfig();
+  initStarInput('bm-stars');
+  initStarInput('tm-stars');
+  renderBottles();
 }
+init();
 
-function importData(e){
-  const file=e.target.files[0]; if(!file)return;
-  const reader=new FileReader();
-  reader.onload=async ev=>{
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(!data.bottles||!data.cocktails) throw new Error('Fichier invalide');
-
-      // Choix du mode d'import
-      const mode = confirm(
-        `Sauvegarde : ${data.bottles.length} bouteilles\nActuel : ${bottles.length} bouteilles\n\n` +
-        `OK → Fusionner (remplace les bouteilles sans photo par celles de la sauvegarde)\n` +
-        `Annuler → Remplacer tout`
-      );
-
-      if(mode){
-        // ── Mode fusion ──
-        const photosDB = await loadAllPhotos();
-        for(const imported of data.bottles){
-          const existingIdx = bottles.findIndex(b=>b.id===imported.id || b.name.toLowerCase()===imported.name.toLowerCase());
-          if(existingIdx>=0){
-            const existing = bottles[existingIdx];
-            const hasPhoto = photosDB[existing.id] || existing.photo;
-            if(!hasPhoto){
-              // Remplace la bouteille existante (sans photo) par celle de la sauvegarde
-              bottles[existingIdx] = {...imported};
-              if(imported.photo) await savePhoto(imported.id, imported.photo);
-            }
-            // Si elle a déjà une photo → on garde l'existante, on ne touche pas
-          } else {
-            // Nouvelle bouteille absente du stock actuel → on l'ajoute
-            bottles.push({...imported});
-            if(imported.photo) await savePhoto(imported.id, imported.photo);
-          }
-        }
-        // Cocktails et notes : on ajoute ceux qui n'existent pas déjà
-        for(const c of (data.cocktails||[])){
-          if(!cocktails.find(x=>x.id===c.id)) cocktails.push(c);
-        }
-        for(const t of (data.tastings||[])){
-          if(!tastings.find(x=>x.id===t.id)) tastings.push(t);
-        }
-        saveB(); saveC(); saveT();
-        renderBottles();
-        showBackupStatus(`Fusion réussie — ${bottles.length} bouteilles au total !`,'ok');
-
-      } else {
-        // ── Mode remplacement total ──
-        if(!confirm('Remplacer TOUTES les données actuelles ?')) return;
-        bottles  = data.bottles.map(b=>({...b}));
-        cocktails= data.cocktails||[];
-        tastings = data.tastings||[];
-        for(const b of bottles){
-          if(b.photo){ await savePhoto(b.id, b.photo); }
-        }
-        saveB(); saveC(); saveT();
-        renderBottles();
-        showBackupStatus(`Import réussi — ${bottles.length} bouteilles restaurées !`,'ok');
-      }
-    }catch(err){
-      console.error(err);
-      showBackupStatus('Erreur : '+err.message,'error');
-    }
-  };
-  reader.readAsText(file);
-}
-
-function showBackupStatus(msg,type){
-  const el=document.getElementById('backup-status');
-  el.style.display='block';
-  el.style.borderLeft=`3px solid ${type==='ok'?'var(--green)':'var(--red)'}`;
-  el.style.background=type==='ok'?'rgba(58,107,74,.1)':'rgba(139,58,58,.1)';
-  el.style.color=type==='ok'?'var(--green)':'var(--red)';
-  el.textContent=(type==='ok'?'✦ ':'✕ ')+msg;
-}
-
-
+// ══ CONFIG ════════════════════════════════════════════
 function loadConfig(){
-  try{ CFG=JSON.parse(localStorage.getItem('bar_cfg2'))||{apikey:'',groqkey:''}; }catch{ CFG={apikey:'',groqkey:''}; }
+  try{CFG=JSON.parse(localStorage.getItem('bar_cfg2'))||{apikey:'',groqkey:''};}catch{CFG={apikey:'',groqkey:''};}
   if(!CFG.groqkey) CFG.groqkey='';
   const el=document.getElementById('cfg-apikey');
   if(el) el.value=CFG.apikey||'';
@@ -813,109 +551,45 @@ function saveConfig(){
   localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
   document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
 }
-
-// ── IndexedDB pour les photos ─────────────────────────
-let _db = null;
-
-function initDB(){
-  return new Promise((resolve, reject)=>{
-    const req = indexedDB.open('monbar_photos', 1);
-    req.onupgradeneeded = e => {
-      e.target.result.createObjectStore('photos', {keyPath:'id'});
-    };
-    req.onsuccess = e => { _db = e.target.result; resolve(); };
-    req.onerror   = e => { console.error('IndexedDB error', e); resolve(); }; // on continue même si ça échoue
-  });
+function openSettings(){
+  document.getElementById('s-apikey').value=CFG.apikey||'';
+  document.getElementById('s-groqkey').value=CFG.groqkey||'';
+  document.getElementById('s-status').style.display='none';
+  document.getElementById('models-list').style.display='none';
+  openModal('settings-modal');
+}
+function saveSettings(){
+  CFG.apikey=document.getElementById('s-apikey').value.trim();
+  CFG.groqkey=document.getElementById('s-groqkey').value.trim();
+  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
+  const el=document.getElementById('cfg-apikey');if(el)el.value=CFG.apikey;
+  document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
+  const st=document.getElementById('s-status');
+  st.style.display='block';setTimeout(()=>st.style.display='none',2500);
+}
+function clearSettings(){
+  CFG={apikey:'',groqkey:''};
+  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
+  document.getElementById('s-apikey').value='';
+  document.getElementById('s-groqkey').value='';
+  const el=document.getElementById('cfg-apikey');if(el)el.value='';
+  document.getElementById('cfg-section').style.display='block';
+  closeModal('settings-modal');
+}
+async function listModels(){
+  const key=document.getElementById('s-apikey').value.trim()||CFG.apikey;
+  const el=document.getElementById('models-list');
+  el.style.display='block';el.textContent='Chargement…';
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+    const data=await res.json();
+    if(!res.ok) throw new Error(data?.error?.message||res.status);
+    const list=data.models.filter(m=>m.supportedGenerationMethods?.includes('generateContent')).map(m=>m.name.replace('models/',''));
+    el.innerHTML='<strong style="color:var(--gold2)">Modèles disponibles :</strong><br>'+list.join('<br>');
+  }catch(e){el.textContent='Erreur : '+e.message;}
 }
 
-function savePhoto(bottleId, dataUrl){
-  if(!_db || !dataUrl) return Promise.resolve();
-  return new Promise((resolve)=>{
-    const tx = _db.transaction('photos','readwrite');
-    tx.objectStore('photos').put({id:bottleId, data:dataUrl});
-    tx.oncomplete = resolve;
-    tx.onerror    = resolve;
-  });
-}
-
-function deletePhoto(bottleId){
-  if(!_db) return Promise.resolve();
-  return new Promise((resolve)=>{
-    const tx = _db.transaction('photos','readwrite');
-    tx.objectStore('photos').delete(bottleId);
-    tx.oncomplete = resolve;
-    tx.onerror    = resolve;
-  });
-}
-
-function loadPhoto(bottleId){
-  if(!_db) return Promise.resolve(null);
-  return new Promise((resolve)=>{
-    const tx  = _db.transaction('photos','readonly');
-    const req = tx.objectStore('photos').get(bottleId);
-    req.onsuccess = e => resolve(e.target.result?.data || null);
-    req.onerror   = ()=> resolve(null);
-  });
-}
-
-function loadAllPhotos(){
-  if(!_db) return Promise.resolve({});
-  return new Promise((resolve)=>{
-    const tx  = _db.transaction('photos','readonly');
-    const req = tx.objectStore('photos').getAll();
-    req.onsuccess = e => {
-      const map = {};
-      (e.target.result||[]).forEach(p => map[p.id]=p.data);
-      resolve(map);
-    };
-    req.onerror = ()=> resolve({});
-  });
-}
-
-// ── Data ──────────────────────────────────────────────
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-
-async function load(){
-  await initDB();
-  try{bottles=JSON.parse(localStorage.getItem(LS.B))||[];}catch{bottles=[];}
-  try{cocktails=JSON.parse(localStorage.getItem(LS.C))||[];}catch{cocktails=[];}
-  try{tastings=JSON.parse(localStorage.getItem(LS.T))||[];}catch{tastings=[];}
-
-  // Charge les photos depuis IndexedDB
-  const photos = await loadAllPhotos();
-  bottles.forEach(b=>{ if(photos[b.id]) b.photo=photos[b.id]; });
-
-  if(!bottles.length)   seedBottles();
-  if(!cocktails.length) seedCocktails();
-}
-
-function saveB(){
-  // Sauvegarde sans les photos dans localStorage (photos → IndexedDB)
-  const bottlesNoPhoto = bottles.map(b=>({...b, photo:null}));
-  try{ localStorage.setItem(LS.B, JSON.stringify(bottlesNoPhoto)); }
-  catch(e){ alert('⚠️ Erreur de sauvegarde : '+e.message); }
-}
-function saveC(){ localStorage.setItem(LS.C,JSON.stringify(cocktails)); }
-function saveT(){ localStorage.setItem(LS.T,JSON.stringify(tastings)); }
-
-function seedBottles(){
-  bottles=[
-    {id:uid(),name:"Hendrick's Gin",cat:'Gin',emoji:'🌿',qty:70,unit:'cl',abv:41.4,origin:'Écosse',stars:5,note:'Floral et concombre',photo:null},
-    {id:uid(),name:'Bacardi Carta Blanca',cat:'Rhum',emoji:'🍬',qty:1,unit:'bouteille(s)',abv:37.5,origin:'Porto Rico',stars:3,note:'Léger, idéal cocktails',photo:null},
-    {id:uid(),name:'Martini Rosso',cat:'Vermouth',emoji:'🍷',qty:50,unit:'cl',abv:15,origin:'Italie',stars:4,note:'Herbacé et sucré',photo:null},
-    {id:uid(),name:'Campari',cat:'Liqueur',emoji:'🔴',qty:1,unit:'bouteille(s)',abv:25,origin:'Italie',stars:4,note:"Amer, notes d'orange",photo:null},
-    {id:uid(),name:'Cointreau',cat:'Liqueur',emoji:'🍊',qty:30,unit:'cl',abv:40,origin:'France',stars:4,note:'Orange délicate',photo:null},
-  ]; saveB();
-}
-function seedCocktails(){
-  cocktails=[
-    {id:uid(),name:'Negroni',emoji:'🍊',ingredients:[{name:'Gin',qty:'3 cl'},{name:'Campari',qty:'3 cl'},{name:'Vermouth',qty:'3 cl'}],prep:"Mélanger avec glaçons. Zeste d'orange."},
-    {id:uid(),name:'Mojito',emoji:'🌿',ingredients:[{name:'Rhum',qty:'5 cl'},{name:'Citron vert',qty:'2 cl'},{name:'Sirop de canne',qty:'2 cl'},{name:'Menthe',qty:'quelques feuilles'}],prep:"Piler la menthe. Rhum et glace pilée. Eau gazeuse."},
-    {id:uid(),name:'Gin Tonic',emoji:'🫧',ingredients:[{name:'Gin',qty:'5 cl'},{name:'Tonic',qty:'15 cl'}],prep:"Grand verre, glaçons, gin, tonic. Quartier citron vert."},
-  ]; saveC();
-}
-
-// ── Tabs ──────────────────────────────────────────────
+// ══ TABS ══════════════════════════════════════════════
 let currentTab='bottles';
 function switchTab(name,el){
   currentTab=name;
@@ -923,57 +597,55 @@ function switchTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   el.classList.add('active');
-  document.getElementById('fab-btn').style.display=name==='stock'||name==='map'?'none':'flex';
+  document.getElementById('fab-btn').style.display=(name==='stock'||name==='map')?'none':'flex';
   if(name==='bottles')   renderBottles();
   if(name==='cocktails') renderCocktails();
   if(name==='tasting')   renderTasting();
   if(name==='stock')     renderStock();
-  if(name==='map')       renderMap();}
+  if(name==='map')       renderMap();
+}
 document.getElementById('fab-btn').addEventListener('click',()=>{
   if(currentTab==='bottles')   openBottleModal();
   if(currentTab==='cocktails') openCocktailModal();
   if(currentTab==='tasting')   openTastingModal();
 });
 
-// ── Modal utils ───────────────────────────────────────
+// ══ MODAL UTILS ═══════════════════════════════════════
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function closeOnBg(e,id){if(e.target===document.getElementById(id))closeModal(id);}
 
-// ── Star input ────────────────────────────────────────
+// ══ STAR INPUT ════════════════════════════════════════
 function initStarInput(cid){
-  const el=document.getElementById(cid); let val=0;
+  const el=document.getElementById(cid);let val=0;
   el.querySelectorAll('.star-inp').forEach(s=>{
-    s.addEventListener('click',()=>{ val=parseInt(s.dataset.v); updateStars(el,val); });
+    s.addEventListener('click',()=>{val=parseInt(s.dataset.v);updateStars(el,val);});
   });
   el._getVal=()=>val;
-  el._setVal=(v)=>{ val=v; updateStars(el,v); };
+  el._setVal=(v)=>{val=v;updateStars(el,v);};
 }
-function updateStars(el,val){
-  el.querySelectorAll('.star-inp').forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=val));
-}
+function updateStars(el,val){el.querySelectorAll('.star-inp').forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=val));}
 
-// ── Photo + IA ────────────────────────────────────────
-let _photo=null, _spinT=null;
+// ══ PHOTO ═════════════════════════════════════════════
+let _photo=null,_spinT=null;
 
 function handlePhoto(e){
-  const file=e.target.files[0]; if(!file)return;
+  const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
       const c=document.createElement('canvas');
-      // Max 400px largeur, 800px hauteur — portrait bouteille
-      const MAXW=400, MAXH=800;
-      let w=img.width, h=img.height;
-      if(w>MAXW){ h=Math.round(h*MAXW/w); w=MAXW; }
-      if(h>MAXH){ w=Math.round(w*MAXH/h); h=MAXH; }
-      c.width=w; c.height=h;
+      const MAXW=400,MAXH=800;
+      let w=img.width,h=img.height;
+      if(w>MAXW){h=Math.round(h*MAXW/w);w=MAXW;}
+      if(h>MAXH){w=Math.round(w*MAXH/h);h=MAXH;}
+      c.width=w;c.height=h;
       c.getContext('2d').drawImage(img,0,0,w,h);
       const dataUrl=c.toDataURL('image/jpeg',.5);
       _photo=dataUrl;
       showPreview(dataUrl);
-      if(!document.getElementById('bm-name').value.trim() && CFG.apikey){
+      if(!document.getElementById('bm-name').value.trim()&&CFG.apikey){
         analyzePhoto(dataUrl);
       }
     };
@@ -984,76 +656,89 @@ function handlePhoto(e){
 
 function showPreview(dataUrl){
   document.getElementById('bm-photo-zone').innerHTML=`
-    <div class="photo-preview-wrap">
-      <img src="${dataUrl}" style="width:100%;max-height:280px;object-fit:contain;background:var(--ivory2);display:block">
-      <div class="photo-actions">
-        <div class="photo-change">
-          <input type="file" accept="image/*" onchange="handlePhoto(event)">
-          🖼 Changer la photo
-        </div>
-        <button class="photo-del" onclick="clearPhoto()">✕</button>
-      </div>
+    <img src="${dataUrl}" style="width:100%;max-height:280px;object-fit:contain;background:var(--ivory2);display:block">
+    <div style="display:flex;border-top:1px solid var(--gold-border)">
+      <div class="photo-change"><input type="file" accept="image/*" onchange="handlePhoto(event)">🖼 Changer</div>
+      <button class="photo-del" onclick="clearPhoto()">✕</button>
     </div>`;
 }
-
 function clearPhoto(){
   _photo=null;
   document.getElementById('bm-photo-zone').innerHTML=`
-    <div style="font-size:32px;opacity:.4">📷</div>
+    <div style="font-size:28px;opacity:.4">📷</div>
     <div class="photo-btns">
       <div class="photo-btn"><input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event)">📸 Appareil</div>
       <div class="photo-btn"><input type="file" accept="image/*" onchange="handlePhoto(event)">🖼 Galerie</div>
     </div>`;
 }
-
 function setAiStatus(msg,type){
   const el=document.getElementById('ai-status');
-  clearInterval(_spinT);
-  el.style.display='flex';
-  el.style.flexDirection='column';
-  el.style.alignItems='flex-start';
+  clearInterval(_spinT);el.style.display='flex';
+  el.style.borderLeftColor=type==='ok'?'var(--green)':type==='error'?'var(--red)':'var(--gold)';
+  el.style.background=type==='ok'?'rgba(58,107,74,.1)':type==='error'?'rgba(139,58,58,.1)':'var(--gold-dim)';
+  el.style.color=type==='ok'?'var(--green)':type==='error'?'var(--red)':'var(--text-mid)';
   if(type==='loading'){
-    const dots=['◌','◎','●','◎']; let i=0;
-    el.innerHTML=`<span id="spin-dot">◌</span>&nbsp;${msg}`;
-    _spinT=setInterval(()=>{ const s=document.getElementById('spin-dot'); if(s)s.textContent=dots[i++%4]; },250);
-  } else if(type==='ok'){
-    el.style.borderLeftColor='var(--green)';
-    el.style.background='rgba(58,107,74,.1)';
-    el.innerHTML='✦ '+msg;
-    setTimeout(()=>{ el.style.display='none'; el.style.borderLeftColor='var(--gold)'; el.style.background='var(--gold-dim)'; },3000);
-  } else {
-    // error — affiche le message complet, reste affiché
-    el.style.borderLeftColor='var(--red)';
-    el.style.background='rgba(139,58,58,.1)';
-    el.style.color='var(--red)';
-    el.innerHTML='✕ '+msg+'<br><small style="font-size:9px;opacity:.7;margin-top:4px;word-break:break-all">Ouvre la console (F12) pour plus de détails</small>';
+    const dots=['◌','◎','●','◎'];let i=0;
+    el.innerHTML=`<span id="ai-spin">◌</span> ${msg}`;
+    _spinT=setInterval(()=>{const s=document.getElementById('ai-spin');if(s)s.textContent=dots[i++%4];},250);
+  }else{
+    el.innerHTML=(type==='ok'?'✦ ':'✕ ')+msg;
+    if(type==='ok') setTimeout(()=>el.style.display='none',3000);
   }
 }
 
-// analyzePhoto définie dans le bloc settings ci-dessous
+async function analyzePhoto(dataUrl){
+  setAiStatus('Analyse de la bouteille…','loading');
+  const base64=dataUrl.split(',')[1];
+  const prompt=`Analyse cette bouteille. Réponds UNIQUEMENT avec ce JSON sans texte autour :
+{"name":"Nom complet","cat":"parmi: ${CATS.join(',')}","emoji":"1 emoji","abv":degré_ou_0,"origin":"Pays en anglais","note":"Arômes max 80 chars"}
+Si illisible mets null.`;
+  const models=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-flash-lite-latest'];
+  let lastErr='';
+  for(const model of models){
+    try{
+      const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${CFG.apikey}`;
+      const body=JSON.stringify({contents:[{parts:[{inline_data:{mime_type:'image/jpeg',data:base64}},{text:prompt}]}],generationConfig:{temperature:0,maxOutputTokens:300}});
+      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});
+      const data=await res.json();
+      if(!res.ok){lastErr=data?.error?.message||'HTTP '+res.status;continue;}
+      const raw=data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
+      const info=JSON.parse(raw.replace(/```json|```/g,'').trim());
+      if(info.name)                         document.getElementById('bm-name').value  =info.name;
+      if(info.cat&&CATS.includes(info.cat)) document.getElementById('bm-cat').value   =info.cat;
+      if(info.emoji)                        document.getElementById('bm-emoji').value =info.emoji;
+      if(info.abv)                          document.getElementById('bm-abv').value   =info.abv;
+      if(info.origin)                       document.getElementById('bm-origin').value=info.origin;
+      if(info.note)                         document.getElementById('bm-note').value  =info.note;
+      setAiStatus('Champs pré-remplis !','ok');return;
+    }catch(e){lastErr=e.message;}
+  }
+  setAiStatus('Erreur : '+lastErr,'error');
+}
 
-// ── Bottles ───────────────────────────────────────────
+// ══ BOUTEILLES ════════════════════════════════════════
 let bActiveCat='Tous';
 function renderBottles(){
-  const q=document.getElementById('b-search').value.toLowerCase();
+  const q=(document.getElementById('b-search')?.value||'').toLowerCase();
   const cats=['Tous',...new Set(bottles.map(b=>b.cat))];
-  document.getElementById('b-pills').innerHTML=cats.map(c=>
-    `<div class="pill ${c===bActiveCat?'active':''}" onclick="setBCat('${c}')">${c}</div>`
-  ).join('');
+  document.getElementById('b-pills').innerHTML=cats.map(c=>`<div class="pill ${c===bActiveCat?'active':''}" onclick="setBCat('${c}')">${c}</div>`).join('');
   const list=bottles.filter(b=>(bActiveCat==='Tous'||b.cat===bActiveCat)&&(!q||b.name.toLowerCase().includes(q)||b.cat.toLowerCase().includes(q)));
   const el=document.getElementById('b-list');
-  if(!list.length){el.innerHTML=`<div class="empty"><div class="e-icon">🍾</div><p>Aucune bouteille</p></div>`;return;}
+  if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">🍾</div><p>Aucune bouteille</p></div>`;return;}
   el.innerHTML=list.map(b=>{
     const em=b.emoji||CAT_EMOJI[b.cat]||'🍶';
     const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=(b.stars||0)?'on':''}">★</span>`).join('');
     return`<div class="bottle-card" onclick="openBottleDetail('${b.id}')">
       <div class="b-body">
         <div class="b-emoji">${em}</div>
-        <div class="b-info"><div class="b-name">${b.name}</div><div class="b-cat">${b.cat}${b.origin?' · '+b.origin:''}${b.vintage?' · '+b.vintage:''}</div></div>
+        <div class="b-info">
+          <div class="b-name">${b.name}</div>
+          <div class="b-cat">${b.cat}${b.origin?' · '+b.origin:''}${b.vintage?' · '+b.vintage:''}</div>
+        </div>
         <div class="b-right">
           <div class="b-qty">${b.qty}</div>
           <div class="b-qty-label">${b.unit}</div>
-          ${b.bottles?`<div style="font-size:10px;color:var(--text-muted);margin-top:3px;letter-spacing:1px">${b.bottles} 🍾</div>`:''}
+          ${b.bottles?`<div style="font-size:9px;color:var(--text-muted);margin-top:2px">${b.bottles} 🍾</div>`:''}
           <div class="b-rating">${stars}</div>
         </div>
       </div></div>`;
@@ -1065,20 +750,20 @@ function openBottleModal(id){
   resetBottleForm();
   document.getElementById('bm-title').textContent=id?'Modifier':'Nouvelle bouteille';
   document.getElementById('bm-delete').style.display=id?'block':'none';
-  document.getElementById('cfg-section').style.display=(CFG.imgbb&&CFG.webhook)?'none':'block';
+  document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
   document.getElementById('ai-status').style.display='none';
   if(id){
-    const b=bottles.find(x=>x.id===id);
+    const b=bottles.find(x=>x.id===id);if(!b)return;
     document.getElementById('bm-id').value=id;
     document.getElementById('bm-name').value=b.name;
     document.getElementById('bm-cat').value=b.cat;
     document.getElementById('bm-emoji').value=b.emoji||'';
     document.getElementById('bm-qty').value=b.qty;
     document.getElementById('bm-unit').value=b.unit;
+    document.getElementById('bm-bottles').value=b.bottles||'';
     document.getElementById('bm-abv').value=b.abv||'';
     document.getElementById('bm-origin').value=b.origin||'';
     document.getElementById('bm-vintage').value=b.vintage||'';
-    document.getElementById('bm-bottles').value=b.bottles||'';
     document.getElementById('bm-note').value=b.note||'';
     document.getElementById('bm-stars')._setVal(b.stars||0);
     if(b.photo){_photo=b.photo;showPreview(b.photo);}
@@ -1090,60 +775,59 @@ function resetBottleForm(){
   document.getElementById('bm-cat').value='Gin';
   document.getElementById('bm-unit').value='cl';
   document.getElementById('bm-stars')._setVal(0);
-  _photo=null; clearPhoto();
+  _photo=null;clearPhoto();
 }
 async function saveBottle(){
-  const name=document.getElementById('bm-name').value.trim(); if(!name){document.getElementById('bm-name').focus();return;}
-  const id=document.getElementById('bm-id').value||uid();
-  const existPhoto=id?(bottles.find(x=>x.id===id)||{}).photo:null;
-  const photoToUse = _photo!==null ? _photo : existPhoto;
+  const name=document.getElementById('bm-name').value.trim();
+  if(!name){document.getElementById('bm-name').focus();return;}
+  const editId=document.getElementById('bm-id').value;
+  const existPhoto=editId?(bottles.find(x=>x.id===editId)||{}).photo:null;
+  const id=editId||uid();
+  const photoToUse=_photo!==null?_photo:existPhoto;
   const obj={id,name,
     cat:document.getElementById('bm-cat').value,
     emoji:document.getElementById('bm-emoji').value.trim(),
     qty:parseFloat(document.getElementById('bm-qty').value)||0,
     unit:document.getElementById('bm-unit').value,
+    bottles:parseInt(document.getElementById('bm-bottles').value)||null,
     abv:parseFloat(document.getElementById('bm-abv').value)||0,
     origin:document.getElementById('bm-origin').value.trim(),
     vintage:parseInt(document.getElementById('bm-vintage').value)||null,
-    bottles:parseInt(document.getElementById('bm-bottles').value)||null,
     stars:document.getElementById('bm-stars')._getVal(),
     note:document.getElementById('bm-note').value.trim(),
-    photo: photoToUse // gardé en mémoire pour l'affichage
+    photo:photoToUse
   };
-  const editId=document.getElementById('bm-id').value;
-  if(editId){const i=bottles.findIndex(x=>x.id===editId);if(i>=0)bottles[i]=obj;}else bottles.push(obj);
-
-  // Photo → IndexedDB, reste → localStorage
-  if(photoToUse) await savePhoto(obj.id, photoToUse);
-  else if(_photo===null && editId) await deletePhoto(editId); // photo supprimée
-  saveB();
-  closeModal('bottle-modal');renderBottles();
+  if(editId){const i=bottles.findIndex(x=>x.id===editId);if(i>=0)bottles[i]=obj;}
+  else bottles.push(obj);
+  if(photoToUse) await dbSavePhoto(id,photoToUse);
+  else if(_photo===null&&editId) await dbDeletePhoto(editId);
+  saveB();closeModal('bottle-modal');renderBottles();
 }
 async function deleteBottle(){
   const id=document.getElementById('bm-id').value;
   bottles=bottles.filter(x=>x.id!==id);
-  await deletePhoto(id);
+  await dbDeletePhoto(id);
   saveB();closeModal('bottle-modal');renderBottles();
 }
 function openBottleDetail(id){
-  const b=bottles.find(x=>x.id===id); if(!b)return;
+  const b=bottles.find(x=>x.id===id);if(!b)return;
   const em=b.emoji||CAT_EMOJI[b.cat]||'🍶';
-  const stars=[1,2,3,4,5].map(i=>`<span class="detail-star ${i<=(b.stars||0)?'on':''}">★</span>`).join('');
+  const stars=[1,2,3,4,5].map(i=>`<span class="dh dst ${i<=(b.stars||0)?'on':''}">★</span>`).join('');
   document.getElementById('detail-content').innerHTML=`
     <div class="modal-handle"></div>
-    ${b.photo?`<img class="detail-photo" src="${b.photo}" alt="" style="max-height:320px;object-fit:contain;background:var(--ivory2)">`:''}
-    <div class="detail-hero" style="${b.photo?'padding-top:14px':''}">
-      ${!b.photo?`<div class="detail-emoji-big">${em}</div>`:''}
-      <div class="detail-name">${b.name}</div>
-      <div class="detail-cat">${b.cat}${b.origin?' · '+b.origin:''}${b.vintage?' · '+b.vintage:''}</div>
-      <div class="detail-stars">${stars}</div>
+    ${b.photo?`<img class="detail-photo" src="${b.photo}" alt="">`:''}
+    <div class="dh" style="${b.photo?'padding-top:10px':''}">
+      ${!b.photo?`<div class="de">${em}</div>`:''}
+      <div class="dn">${b.name}</div>
+      <div class="dc">${b.cat}${b.origin?' · '+b.origin:''}${b.vintage?' · '+b.vintage:''}</div>
+      <div class="ds">${stars}</div>
     </div>
     <div class="deco-line"><div class="deco-diamond"></div></div>
     <div class="info-grid">
-      <div class="info-row"><span class="info-key">Quantité</span><span class="info-val">${b.qty} ${b.unit}</span></div>
-      ${b.bottles?`<div class="info-row"><span class="info-key">Nb de bouteilles</span><span class="info-val">${b.bottles} 🍾</span></div>`:''}
-      ${b.abv?`<div class="info-row"><span class="info-key">Alcool</span><span class="info-val">${b.abv}%</span></div>`:''}
-      ${b.vintage?`<div class="info-row"><span class="info-key">Millésime</span><span class="info-val">${b.vintage}</span></div>`:''}
+      <div class="info-row"><span class="ik">Quantité</span><span class="iv">${b.qty} ${b.unit}</span></div>
+      ${b.bottles?`<div class="info-row"><span class="ik">Nb bouteilles</span><span class="iv">${b.bottles} 🍾</span></div>`:''}
+      ${b.abv?`<div class="info-row"><span class="ik">Alcool</span><span class="iv">${b.abv}%</span></div>`:''}
+      ${b.vintage?`<div class="info-row"><span class="ik">Millésime</span><span class="iv">${b.vintage}</span></div>`:''}
     </div>
     <div class="qty-controls">
       <button class="qty-btn" onclick="adjB('${b.id}',-1)">−</button>
@@ -1151,55 +835,55 @@ function openBottleDetail(id){
       <button class="qty-btn" onclick="adjB('${b.id}',+1)">+</button>
     </div>
     ${b.note?`<div class="note-box">${b.note}</div>`:''}
-    <button class="btn btn-primary" onclick="closeModal('detail-modal');openBottleModal('${b.id}')">✏ Modifier</button>
-    <button class="btn btn-ghost" onclick="closeModal('detail-modal')">Fermer</button>`;
+    <button class="btn btn-p" onclick="closeModal('detail-modal');openBottleModal('${b.id}')">✏ Modifier</button>
+    <button class="btn btn-g" onclick="closeModal('detail-modal')">Fermer</button>`;
   openModal('detail-modal');
 }
 function adjB(id,d){
-  const b=bottles.find(x=>x.id===id); if(!b)return;
-  b.qty=Math.max(0,b.qty+d); saveB();
-  const el=document.getElementById('det-qty'); if(el)el.textContent=b.qty;
+  const b=bottles.find(x=>x.id===id);if(!b)return;
+  b.qty=Math.max(0,b.qty+d);saveB();
+  const el=document.getElementById('det-qty');if(el)el.textContent=b.qty;
   renderBottles();
 }
 
-// ── Cocktails ─────────────────────────────────────────
+// ══ COCKTAILS ═════════════════════════════════════════
 function hasIng(name){
   const n=name.toLowerCase();
   return bottles.some(b=>b.name.toLowerCase().includes(n)||b.cat.toLowerCase().includes(n)||n.includes(b.cat.toLowerCase())||n.includes(b.name.toLowerCase().split(' ')[0]));
 }
 function renderCocktails(){
   const el=document.getElementById('c-list');
-  if(!cocktails.length){el.innerHTML=`<div class="empty"><div class="e-icon">🍸</div><p>Aucun cocktail</p></div>`;return;}
+  if(!cocktails.length){el.innerHTML=`<div class="empty"><div class="ei">🍸</div><p>Aucun cocktail</p></div>`;return;}
   el.innerHTML=cocktails.map(c=>{
     const h=c.ingredients.map(i=>hasIng(i.name));
     const all=h.every(Boolean),some=h.some(Boolean);
     return`<div class="cocktail-card" onclick="openCocktailDetail('${c.id}')">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="c-emoji">${c.emoji||'🍸'}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:32px">${c.emoji||'🍸'}</div>
         <div><div class="c-title">${c.name}</div>
           <div class="c-avail ${all?'avail-yes':some?'avail-partial':'avail-no'}">${all?'Prêt à préparer':some?'Partiellement disponible':'Ingrédients manquants'}</div>
         </div>
       </div>
-      <div class="c-ingredients">${c.ingredients.map((ing,i)=>`<div class="c-ing">
-        <div style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:${hasIng(ing.name)?'var(--green)':'var(--ivory3)'}"></div>
-        <span style="flex:1">${ing.name}</span><span style="font-size:11px;color:var(--text-muted)">${ing.qty}${hasIng(ing.name)?' ✓':''}</span>
+      <div class="c-ings">${c.ingredients.map(i=>`<div class="c-ing">
+        <div style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:${hasIng(i.name)?'var(--green)':'var(--ivory3)'}"></div>
+        <span style="flex:1">${i.name}</span><span style="font-size:10px;color:var(--text-muted)">${i.qty}${hasIng(i.name)?' ✓':''}</span>
       </div>`).join('')}</div></div>`;
   }).join('');
 }
 function openCocktailDetail(id){
-  const c=cocktails.find(x=>x.id===id); if(!c)return;
+  const c=cocktails.find(x=>x.id===id);if(!c)return;
   document.getElementById('cocktail-detail-content').innerHTML=`
     <div class="modal-handle"></div>
-    <div class="detail-hero"><div class="detail-emoji-big">${c.emoji||'🍸'}</div><div class="detail-name">${c.name}</div></div>
+    <div class="dh"><div class="de">${c.emoji||'🍸'}</div><div class="dn">${c.name}</div></div>
     <div class="deco-line"><div class="deco-diamond"></div></div>
     <div class="sec-head">Ingrédients</div>
     <div class="info-grid">${c.ingredients.map(i=>`<div class="info-row">
-      <span style="display:flex;align-items:center;gap:8px">
-        <span style="width:6px;height:6px;border-radius:50%;background:${hasIng(i.name)?'var(--green)':'var(--ivory3)'};flex-shrink:0;display:inline-block"></span>${i.name}
-      </span><span class="info-val">${i.qty}</span></div>`).join('')}</div>
+      <span style="display:flex;align-items:center;gap:7px">
+        <span style="width:5px;height:5px;border-radius:50%;background:${hasIng(i.name)?'var(--green)':'var(--ivory3)'};flex-shrink:0;display:inline-block"></span>${i.name}
+      </span><span class="iv">${i.qty}</span></div>`).join('')}</div>
     ${c.prep?`<div class="sec-head">Préparation</div><div class="note-box">${c.prep}</div>`:''}
-    <button class="btn btn-primary" onclick="closeModal('cocktail-detail-modal');openCocktailModal('${c.id}')">✏ Modifier</button>
-    <button class="btn btn-ghost" onclick="closeModal('cocktail-detail-modal')">Fermer</button>`;
+    <button class="btn btn-p" onclick="closeModal('cocktail-detail-modal');openCocktailModal('${c.id}')">✏ Modifier</button>
+    <button class="btn btn-g" onclick="closeModal('cocktail-detail-modal')">Fermer</button>`;
   openModal('cocktail-detail-modal');
 }
 function openCocktailModal(id){
@@ -1207,7 +891,7 @@ function openCocktailModal(id){
   document.getElementById('cm-delete').style.display='none';
   document.getElementById('cm-title').textContent='Nouveau cocktail';
   if(id){
-    const c=cocktails.find(x=>x.id===id);
+    const c=cocktails.find(x=>x.id===id);if(!c)return;
     document.getElementById('cm-id').value=id;
     document.getElementById('cm-name').value=c.name;
     document.getElementById('cm-emoji').value=c.emoji||'';
@@ -1219,7 +903,7 @@ function openCocktailModal(id){
   openModal('cocktail-modal');
 }
 function saveCocktail(){
-  const name=document.getElementById('cm-name').value.trim(); if(!name)return;
+  const name=document.getElementById('cm-name').value.trim();if(!name)return;
   const ings=document.getElementById('cm-ings').value.trim().split('\n').filter(Boolean).map(l=>{const[n,q]=l.split('|').map(s=>s.trim());return{name:n||l,qty:q||''};});
   const id=document.getElementById('cm-id').value;
   const obj={id:id||uid(),name,emoji:document.getElementById('cm-emoji').value.trim(),ingredients:ings,prep:document.getElementById('cm-prep').value.trim()};
@@ -1231,19 +915,100 @@ function deleteCocktail(){
   saveC();closeModal('cocktail-modal');renderCocktails();
 }
 
-// ── Dégustation ───────────────────────────────────────
+// ══ SUGGESTIONS COCKTAILS IA ══════════════════════════
+let _excludedCocktails=[];
+let _suggestSpinT=null;
+function setSuggestStatus(msg,type){
+  const el=document.getElementById('suggest-status');
+  clearInterval(_suggestSpinT);
+  el.style.display='flex';
+  el.style.borderLeftColor=type==='ok'?'var(--green)':type==='error'?'var(--red)':'var(--gold)';
+  el.style.background=type==='ok'?'rgba(58,107,74,.1)':type==='error'?'rgba(139,58,58,.1)':'var(--gold-dim)';
+  el.style.color=type==='ok'?'var(--green)':type==='error'?'var(--red)':'var(--text-mid)';
+  if(type==='loading'){
+    const dots=['◌','◎','●','◎'];let i=0;
+    el.innerHTML=`<span id="sug-spin">◌</span> ${msg}`;
+    _suggestSpinT=setInterval(()=>{const s=document.getElementById('sug-spin');if(s)s.textContent=dots[i++%4];},250);
+  }else{
+    el.innerHTML=(type==='ok'?'✦ ':'✕ ')+msg;
+    if(type==='ok') setTimeout(()=>el.style.display='none',3000);
+  }
+}
+async function suggestCocktails(refresh=false){
+  if(!CFG.groqkey){setSuggestStatus('Configure ta clé Groq dans ⚙','error');return;}
+  if(!bottles.length){setSuggestStatus('Ajoute d\'abord des bouteilles','error');return;}
+  if(!refresh) _excludedCocktails=[];
+  if(window._aiRecipes) _excludedCocktails.push(...window._aiRecipes.map(r=>r.name));
+  setSuggestStatus(refresh?'Nouvelles suggestions…':'Génération des recettes…','loading');
+  document.getElementById('ai-cocktails').innerHTML='';
+  const stock=bottles.filter(b=>b.qty>0).map(b=>`${b.name} (${b.cat})`).join(', ');
+  const excl=_excludedCocktails.length?`\nExclus : ${_excludedCocktails.join(', ')}.`:'';
+  const prompt=`Stock : ${stock}.${excl}\nPropose 3 cocktails réalisables. JSON uniquement :\n[{"name":"","emoji":"","ingredients":[{"name":"","qty":""}],"prep":"","tip":""}]`;
+  try{
+    const raw=await callGroq(prompt);
+    const recipes=JSON.parse(raw);
+    window._aiRecipes=recipes;
+    setSuggestStatus(recipes.length+' cocktails suggérés !','ok');
+    document.getElementById('ai-cocktails').innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sec-head" style="margin:0">Suggestions IA</div>
+        <button onclick="suggestCocktails(true)" style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:10px;letter-spacing:1px;padding:4px 10px;cursor:pointer;font-family:'Josefin Sans',sans-serif">🔄 Autres</button>
+      </div>
+      ${recipes.map((r,i)=>`<div class="cocktail-card" onclick="openAiRecipe(${i})" style="border-left:4px solid var(--gold)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-size:32px">${r.emoji||'🍸'}</div>
+          <div><div class="c-title">${r.name}</div><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:2px">✦ Suggestion IA</div></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--text-muted)">Voir →</div>
+        </div></div>`).join('')}
+      <div style="height:1px;background:var(--ivory3);margin:14px 0"></div>`;
+  }catch(err){setSuggestStatus('Erreur : '+err.message,'error');}
+}
+function openAiRecipe(i){
+  const r=window._aiRecipes[i];
+  document.getElementById('ai-recipe-content').innerHTML=`
+    <div class="modal-handle"></div>
+    <div class="dh"><div class="de">${r.emoji||'🍸'}</div><div class="dn">${r.name}</div><div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:3px">✦ Suggestion IA</div></div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div class="sec-head">Ingrédients</div>
+    <div class="info-grid">${r.ingredients.map(i=>`<div class="info-row"><span style="display:flex;align-items:center;gap:7px"><span style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;display:inline-block"></span>${i.name}</span><span class="iv">${i.qty}</span></div>`).join('')}</div>
+    <div class="sec-head">Préparation</div><div class="note-box">${r.prep}</div>
+    ${r.tip?`<div style="background:var(--gold-dim);border-left:3px solid var(--gold);padding:9px 12px;font-size:11px;color:var(--text-mid);margin-bottom:10px">💡 <em>${r.tip}</em></div>`:''}
+    <button class="btn btn-p" onclick="saveAiCocktail(${i})">＋ Ajouter à mes cocktails</button>
+    <button class="btn btn-g" onclick="closeModal('ai-recipe-modal')">Fermer</button>`;
+  openModal('ai-recipe-modal');
+}
+function saveAiCocktail(i){
+  const r=window._aiRecipes[i];
+  cocktails.push({id:uid(),name:r.name,emoji:r.emoji||'🍸',ingredients:r.ingredients,prep:r.prep+(r.tip?'\n💡 '+r.tip:'')});
+  saveC();closeModal('ai-recipe-modal');renderCocktails();
+  setSuggestStatus('Cocktail ajouté !','ok');
+}
+async function callGroq(prompt){
+  const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+CFG.groqkey},
+    body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[
+      {role:'system',content:'Tu es un expert barman. Réponds toujours en JSON valide uniquement, sans texte autour, sans markdown.'},
+      {role:'user',content:prompt}
+    ],temperature:0.7,max_tokens:1000})
+  });
+  const data=await res.json();
+  if(!res.ok) throw new Error(data?.error?.message||'HTTP '+res.status);
+  return (data?.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim();
+}
+
+// ══ DÉGUSTATION ═══════════════════════════════════════
 function renderTasting(){
   const el=document.getElementById('t-list');
-  if(!tastings.length){el.innerHTML=`<div class="empty"><div class="e-icon">📝</div><p>Aucune note</p></div>`;return;}
+  if(!tastings.length){el.innerHTML=`<div class="empty"><div class="ei">📝</div><p>Aucune note</p></div>`;return;}
   el.innerHTML=[...tastings].reverse().map(t=>{
     const stars=[1,2,3,4,5].map(i=>`<span class="t-star ${i<=(t.stars||0)?'on':''}">★</span>`).join('');
     const d=new Date(t.date).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
     return`<div class="tasting-card" onclick="openTastingModal('${t.id}')">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div><div class="t-name">${t.bottleName}</div><div style="display:flex;gap:2px;margin:6px 0">${stars}</div></div>
+        <div><div class="t-name">${t.bottleName}</div><div style="display:flex;gap:2px;margin:5px 0">${stars}</div></div>
         <div class="t-date">${d}</div>
-      </div>
-      ${t.note?`<div class="t-note">${t.note}</div>`:''}
+      </div>${t.note?`<div class="t-note">${t.note}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -1253,7 +1018,7 @@ function openTastingModal(id){
   document.getElementById('tm-delete').style.display='none';
   document.getElementById('tm-bottle').innerHTML=bottles.map(b=>`<option value="${b.id}">${b.name}</option>`).join('');
   if(id){
-    const t=tastings.find(x=>x.id===id);
+    const t=tastings.find(x=>x.id===id);if(!t)return;
     document.getElementById('tm-id').value=id;
     document.getElementById('tm-bottle').value=t.bottleId||'';
     document.getElementById('tm-stars')._setVal(t.stars||0);
@@ -1278,7 +1043,7 @@ function deleteTasting(){
   saveT();closeModal('tasting-modal');renderTasting();
 }
 
-// ── Stock ─────────────────────────────────────────────
+// ══ STOCK ═════════════════════════════════════════════
 function renderStock(){
   document.getElementById('s-summary').innerHTML=`
     <div class="s-stat"><div class="s-stat-val">${bottles.length}</div><div class="s-stat-label">Bouteilles</div></div>
@@ -1295,279 +1060,132 @@ function renderStock(){
       </div></div>`).join('');
 }
 function adjStk(id,d){
-  const b=bottles.find(x=>x.id===id); if(!b)return;
-  b.qty=Math.max(0,b.qty+d); saveB();
-  const el=document.getElementById('sq-'+id); if(el)el.textContent=b.qty;
+  const b=bottles.find(x=>x.id===id);if(!b)return;
+  b.qty=Math.max(0,b.qty+d);saveB();
+  const el=document.getElementById('sq-'+id);if(el)el.textContent=b.qty;
   renderStock();
 }
 
-// ── Init ──────────────────────────────────────────────
-load().then(()=>{
-  loadConfig();
-  initStarInput('bm-stars');
-  initStarInput('tm-stars');
-  renderBottles();
-});
-</script>
-<!-- MODAL RECETTE IA -->
-<div class="modal-overlay" id="ai-recipe-modal" onclick="closeOnBg(event,'ai-recipe-modal')">
-  <div class="modal" id="ai-recipe-content"></div>
-</div>
+// ══ CARTE ═════════════════════════════════════════════
+let _map=null,_mapMarkers=[],_geocodeCache={};
 
-
-<div class="modal-overlay" id="settings-modal" onclick="closeOnBg(event,'settings-modal')">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Paramètres IA</div>
-    <div class="deco-line"><div class="deco-diamond"></div></div>
-
-    <!-- Gemini -->
-    <div style="background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:10px">
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:6px">📷 Analyse photo — Google Gemini</div>
-      <div style="font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:8px">
-        Gratuit sur <a href="https://aistudio.google.com" target="_blank" style="color:var(--gold)">aistudio.google.com</a> → Get API Key
-      </div>
-      <input class="form-input" id="s-apikey" placeholder="AIza..." type="password" autocomplete="off">
-    </div>
-
-    <!-- Groq -->
-    <div style="background:white;border:1px solid var(--ivory3);padding:14px;margin-bottom:14px">
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:6px">🍸 Suggestions cocktails — Groq</div>
-      <div style="font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:8px">
-        Gratuit sur <a href="https://console.groq.com" target="_blank" style="color:var(--gold)">console.groq.com</a> → API Keys → Create API Key
-      </div>
-      <input class="form-input" id="s-groqkey" placeholder="gsk_..." type="password" autocomplete="off">
-    </div>
-
-    <div id="s-status" style="display:none;padding:9px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-left:3px solid var(--green);background:rgba(58,107,74,.1);color:var(--green);margin-bottom:8px">✦ Paramètres sauvegardés</div>
-    <button class="btn btn-primary" onclick="saveSettings()">💾 Enregistrer</button>
-    <button class="btn btn-danger" onclick="clearSettings()">Effacer les clés</button>
-    <button class="btn btn-ghost" onclick="listModels()" style="margin-top:6px">🔍 Modèles Gemini disponibles</button>
-    <div id="models-list" style="display:none;margin-top:10px;font-size:11px;color:var(--text-muted);background:var(--noir3);padding:10px;line-height:1.8;word-break:break-all"></div>
-    <button class="btn btn-ghost" onclick="closeModal('settings-modal')">Fermer</button>
-  </div>
-</div>
-
-<script>
-async function listModels(){
-  const key=document.getElementById('s-apikey').value.trim()||CFG.apikey;
-  const el=document.getElementById('models-list');
-  el.style.display='block';
-  el.textContent='Chargement…';
+async function geocodeCountry(country){
+  const key=country.toLowerCase().trim();
+  if(_geocodeCache[key]) return _geocodeCache[key];
+  // Coordonnées fixes pour les territoires/îles non reconnus par Nominatim
+  const FIXED={
+    'la réunion':[-21.11,55.53],'reunion':[-21.11,55.53],'la reunion':[-21.11,55.53],
+    'saint martin':[18.07,-63.08],'st martin':[18.07,-63.08],'saint-martin':[18.07,-63.08],'st-martin':[18.07,-63.08],
+    'cap vert':[16.5,-24.0],'cap-vert':[16.5,-24.0],'cape verde':[16.5,-24.0],'cabo verde':[16.5,-24.0],
+    'malte':[35.9,14.5],'malta':[35.9,14.5],
+    'martinique':[14.6,-61.0],'guadeloupe':[16.3,-61.4],
+    'porto rico':[18.2,-66.5],'puerto rico':[18.2,-66.5],
+  };
+  if(FIXED[key]){_geocodeCache[key]=FIXED[key];return FIXED[key];}
   try{
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(country)}&limit=1&format=json`,{headers:{'Accept-Language':'fr,en'}});
     const data=await res.json();
-    if(!res.ok) throw new Error(data?.error?.message||res.status);
-    const vision=data.models
-      .filter(m=>m.supportedGenerationMethods?.includes('generateContent'))
-      .map(m=>m.name.replace('models/',''));
-    el.innerHTML='<strong style="color:var(--gold2)">Modèles disponibles :</strong><br>'+vision.join('<br>');
-  }catch(e){
-    el.textContent='Erreur : '+e.message;
+    if(data.length){const c=[parseFloat(data[0].lat),parseFloat(data[0].lon)];_geocodeCache[key]=c;return c;}
+  }catch(e){}
+  return null;
+}
+
+async function renderMap(){
+  if(typeof L==='undefined') return;
+  if(!_map){
+    _map=L.map('map-container',{center:[20,10],zoom:2,zoomControl:true,attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(_map);
   }
-}
-function openSettings(){
-  document.getElementById('s-apikey').value=CFG.apikey||'';
-  document.getElementById('s-groqkey').value=CFG.groqkey||'';
-  document.getElementById('s-status').style.display='none';
-  document.getElementById('models-list').style.display='none';
-  openModal('settings-modal');
-}
-function saveSettings(){
-  CFG.apikey=document.getElementById('s-apikey').value.trim();
-  CFG.groqkey=document.getElementById('s-groqkey').value.trim();
-  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
-  const el=document.getElementById('cfg-apikey'); if(el) el.value=CFG.apikey;
-  document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
-  const st=document.getElementById('s-status');
-  st.style.display='block';
-  setTimeout(()=>st.style.display='none',2500);
-}
-function clearSettings(){
-  CFG={apikey:'',groqkey:''};
-  localStorage.setItem('bar_cfg2',JSON.stringify(CFG));
-  document.getElementById('s-apikey').value='';
-  document.getElementById('s-groqkey').value='';
-  const el=document.getElementById('cfg-apikey'); if(el) el.value='';
-  document.getElementById('cfg-section').style.display='block';
-  closeModal('settings-modal');
-}
-
-// ── Suggestions cocktails IA ──────────────────────────
-let _suggestSpinT=null;
-function setSuggestStatus(msg,type){
-  const el=document.getElementById('suggest-status');
-  clearInterval(_suggestSpinT);
-  el.style.display='flex';
-  if(type==='loading'){
-    const dots=['◌','◎','●','◎'];let i=0;
-    el.innerHTML=`<span id="sug-spin">◌</span>&nbsp;${msg}`;
-    _suggestSpinT=setInterval(()=>{const s=document.getElementById('sug-spin');if(s)s.textContent=dots[i++%4];},250);
-  } else if(type==='ok'){
-    el.style.borderLeftColor='var(--green)';el.style.background='rgba(58,107,74,.1)';el.style.color='var(--green)';
-    el.innerHTML='✦ '+msg;
-    setTimeout(()=>{el.style.display='none';el.style.borderLeftColor='var(--gold)';el.style.background='var(--gold-dim)';el.style.color='var(--text-mid)';},3000);
-  } else {
-    el.style.borderLeftColor='var(--red)';el.style.background='rgba(139,58,58,.1)';el.style.color='var(--red)';
-    el.innerHTML='✕ '+msg;
-  }
-}
-
-let _excludedCocktails=[];
-async function suggestCocktails(refresh=false){
-  if(!CFG.groqkey){setSuggestStatus('Configure ta clé Groq dans les paramètres ⚙','error');return;}
-  if(!bottles.length){setSuggestStatus('Ajoute d\'abord des bouteilles','error');return;}
-
-  if(!refresh) _excludedCocktails=[];
-  if(window._aiRecipes) _excludedCocktails.push(...(window._aiRecipes.map(r=>r.name)));
-
-  setSuggestStatus(refresh?'Nouvelles suggestions…':'Génération des recettes…','loading');
-  document.getElementById('ai-cocktails').innerHTML='';
-
-  const stock=bottles.filter(b=>b.qty>0).map(b=>`${b.name} (${b.cat}, ${b.qty} ${b.unit})`).join(', ');
-  const exclusions=_excludedCocktails.length?`\nN'inclus PAS ces cocktails déjà proposés : ${_excludedCocktails.join(', ')}.`:'';
-  const prompt=`Tu es un expert barman. Voici le stock de mon bar personnel : ${stock}.
-Propose 3 recettes de cocktails réalisables avec ces ingrédients.${exclusions}
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte autour, sans markdown :
-[{"name":"Nom du cocktail","emoji":"1 emoji","ingredients":[{"name":"ingrédient","qty":"quantité"}],"prep":"Instructions courtes","tip":"Conseil du barman"}]`;
-
-  try{
-    const raw=await callGroq(prompt);
-    const recipes=JSON.parse(raw);
-
-    setSuggestStatus(recipes.length+' cocktails suggérés !','ok');
-
-    document.getElementById('ai-cocktails').innerHTML=`
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div class="sec-head" style="margin:0">Suggestions IA <span style="font-size:9px;opacity:.6">${recipes.length} recettes</span></div>
-        <button onclick="suggestCocktails(true)"
-          style="background:none;border:1px solid var(--gold-border);color:var(--gold);font-size:11px;
-          letter-spacing:1px;padding:5px 12px;cursor:pointer;font-family:'Josefin Sans',sans-serif">
-          🔄 Autres
-        </button>
-      </div>
-      ${recipes.map((r,i)=>`
-      <div class="cocktail-card" onclick="openAiRecipe(${i})" style="border-left:4px solid var(--gold)">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="font-size:36px">${r.emoji||'🍸'}</div>
-          <div>
-            <div class="c-title">${r.name}</div>
-            <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:3px">✦ Suggestion IA</div>
-          </div>
-          <div style="margin-left:auto;font-size:11px;letter-spacing:1px;color:var(--text-muted)">Voir →</div>
-        </div>
-      </div>`).join('')}
-      <div style="height:1px;background:var(--ivory3);margin:16px 0"></div>`;
-
-    // Stocke les recettes IA pour la modal
-    window._aiRecipes=recipes;
-
-  }catch(err){
-    console.error(err);
-    setSuggestStatus('Erreur : '+err.message,'error');
-  }
-}
-
-function openAiRecipe(i){
-  const r=window._aiRecipes[i];
-  document.getElementById('ai-recipe-content').innerHTML=`
-    <div class="modal-handle"></div>
-    <div style="text-align:center;padding:16px 0 8px">
-      <div style="font-size:56px">${r.emoji||'🍸'}</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;margin-top:8px">${r.name}</div>
-      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:4px">✦ Suggestion IA</div>
-    </div>
-    <div class="deco-line"><div class="deco-diamond"></div></div>
-    <div class="sec-head">Ingrédients</div>
-    <div class="info-grid">
-      ${r.ingredients.map(ing=>`
-      <div class="info-row">
-        <span style="display:flex;align-items:center;gap:8px">
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;display:inline-block"></span>
-          ${ing.name}
-        </span>
-        <span class="info-val">${ing.qty}</span>
-      </div>`).join('')}
-    </div>
-    <div class="sec-head">Préparation</div>
-    <div class="note-box">${r.prep}</div>
-    ${r.tip?`<div style="background:var(--gold-dim);border-left:3px solid var(--gold);padding:10px 14px;font-size:12px;color:var(--text-mid);margin-bottom:12px">
-      💡 <em>${r.tip}</em></div>`:''}
-    <button class="btn btn-primary" onclick="saveAiCocktail(${i})">＋ Ajouter à mes cocktails</button>
-    <button class="btn btn-ghost" onclick="closeModal('ai-recipe-modal')">Fermer</button>`;
-  openModal('ai-recipe-modal');
-}
-
-function saveAiCocktail(i){
-  const r=window._aiRecipes[i];
-  cocktails.push({id:uid(),name:r.name,emoji:r.emoji||'🍸',ingredients:r.ingredients,prep:r.prep+(r.tip?'\n💡 '+r.tip:'')});
-  saveC();
-  closeModal('ai-recipe-modal');
-  renderCocktails();
-  setSuggestStatus('Cocktail ajouté à ta liste !','ok');
-}
-
-// ── Analyse photo — Google Gemini (gratuit) ───────────
-async function analyzePhoto(dataUrl){
-  setAiStatus('Analyse de la bouteille…','loading');
-  const base64=dataUrl.split(',')[1];
-  const prompt=`Analyse cette photo de bouteille d'alcool. Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ou après, sans markdown :
-{"name":"Nom complet marque+produit","cat":"une valeur parmi: ${CATS.join(',')}","emoji":"1 emoji représentatif","abv":degré_number_ou_0,"origin":"Pays","note":"Arômes et style max 80 chars"}
-Si une info est illisible mets null.`;
-
-  const body=JSON.stringify({
-    contents:[{parts:[
-      {inline_data:{mime_type:'image/jpeg',data:base64}},
-      {text:prompt}
-    ]}],
-    generationConfig:{temperature:0,maxOutputTokens:300}
-  });
-
-  const models=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-flash-lite-latest'];
-  let lastErr='';
-  for(const model of models){
+  _mapMarkers.forEach(m=>_map.removeLayer(m));
+  _mapMarkers=[];
+  const byCountry={};
+  bottles.forEach(b=>{if(!b.origin)return;const k=b.origin.trim();if(!byCountry[k])byCountry[k]=[];byCountry[k].push(b);});
+  await Promise.all(Object.entries(byCountry).map(async([country,bots])=>{
     try{
-      const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${CFG.apikey}`;
-      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});
-      const data=await res.json();
-      console.log(`${model} réponse:`,data);
-      if(!res.ok){lastErr=data?.error?.message||'HTTP '+res.status;continue;}
-      const raw=data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
-      const clean=raw.replace(/```json|```/g,'').trim();
-      const info=JSON.parse(clean);
-      if(info.name)                         document.getElementById('bm-name').value  =info.name;
-      if(info.cat&&CATS.includes(info.cat)) document.getElementById('bm-cat').value   =info.cat;
-      if(info.emoji)                        document.getElementById('bm-emoji').value =info.emoji;
-      if(info.abv)                          document.getElementById('bm-abv').value   =info.abv;
-      if(info.origin)                       document.getElementById('bm-origin').value=info.origin;
-      if(info.note)                         document.getElementById('bm-note').value  =info.note;
-      setAiStatus('Champs pré-remplis — vérifie et complète !','ok');
-      return;
-    }catch(e){lastErr=e.message;console.warn(model+' échoué:',e.message);}
-  }
-  setAiStatus('Erreur : '+lastErr,'error');
+      const coords=await geocodeCountry(country);if(!coords)return;
+      const flag=countryToFlag(country);
+      const icon=L.divIcon({html:`<div style="font-size:28px;line-height:1;filter:drop-shadow(0 2px 5px rgba(0,0,0,.3))">${flag}</div>`,className:'',iconSize:[34,34],iconAnchor:[17,17]});
+      const names=bots.map(b=>`<div style="padding:3px 0;border-bottom:1px solid rgba(0,0,0,.07);font-size:12px">${b.emoji||'🍾'} ${b.name}</div>`).join('');
+      const marker=L.marker(coords,{icon}).bindPopup(`
+        <div style="font-family:'Josefin Sans',sans-serif;min-width:150px">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:7px;font-weight:600">${flag} ${country}</div>
+          ${names}
+          <div style="font-size:9px;color:var(--text-muted);margin-top:5px">${bots.length} bouteille${bots.length>1?'s':''}</div>
+        </div>`).addTo(_map);
+      _mapMarkers.push(marker);
+    }catch(e){}
+  }));
+  if(_mapMarkers.length){const g=L.featureGroup(_mapMarkers);_map.fitBounds(g.getBounds().pad(0.3));}
+  setTimeout(()=>_map.invalidateSize(),200);
 }
 
-// ── Suggestions cocktails via Groq ────────────────────
-async function callGroq(prompt){
-  const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+CFG.groqkey},
-    body:JSON.stringify({
-      model:'llama-3.3-70b-versatile',
-      messages:[
-        {role:'system',content:'Tu es un expert barman. Réponds toujours en JSON valide uniquement, sans texte autour, sans markdown.'},
-        {role:'user',content:prompt}
-      ],
-      temperature:0.7,
-      max_tokens:1000
-    })
-  });
-  const data=await res.json();
-  if(!res.ok) throw new Error(data?.error?.message||'HTTP '+res.status);
-  const raw=data?.choices?.[0]?.message?.content||'';
-  return raw.replace(/```json|```/g,'').trim();
+// ══ SAUVEGARDE ════════════════════════════════════════
+function openBackup(){
+  const d=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('backup-info').innerHTML=`
+    🍾 <strong style="color:var(--gold2)">${bottles.length}</strong> bouteille${bottles.length>1?'s':''}<br>
+    🍸 <strong style="color:var(--gold2)">${cocktails.length}</strong> cocktail${cocktails.length>1?'s':''}<br>
+    📝 <strong style="color:var(--gold2)">${tastings.length}</strong> note${tastings.length>1?'s':''}<br>
+    🕐 ${d}`;
+  document.getElementById('backup-status').style.display='none';
+  openModal('backup-modal');
+}
+async function exportData(){
+  const photos=await dbLoadAllPhotos();
+  const data={version:2,date:new Date().toISOString(),
+    bottles:bottles.map(b=>({...b,photo:photos[b.id]||b.photo||null})),
+    cocktails,tastings};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`monbar-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+  showBackupStatus('Sauvegarde téléchargée !','ok');
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.bottles||!data.cocktails) throw new Error('Fichier invalide');
+      const merge=confirm(`Sauvegarde : ${data.bottles.length} bouteilles / Actuel : ${bottles.length} bouteilles\n\nOK → Fusionner (garde les bouteilles avec photo)\nAnnuler → Remplacer tout`);
+      if(merge){
+        const photosDB=await dbLoadAllPhotos();
+        for(const imp of data.bottles){
+          const idx=bottles.findIndex(b=>b.id===imp.id||b.name.toLowerCase()===imp.name.toLowerCase());
+          if(idx>=0){
+            if(!photosDB[bottles[idx].id]&&!bottles[idx].photo){
+              bottles[idx]={...imp};
+              if(imp.photo) await dbSavePhoto(imp.id,imp.photo);
+            }
+          }else{
+            bottles.push({...imp});
+            if(imp.photo) await dbSavePhoto(imp.id,imp.photo);
+          }
+        }
+        for(const c of (data.cocktails||[])){if(!cocktails.find(x=>x.id===c.id))cocktails.push(c);}
+        for(const t of (data.tastings||[])){if(!tastings.find(x=>x.id===t.id))tastings.push(t);}
+      }else{
+        if(!confirm('Remplacer TOUTES les données ?')) return;
+        bottles=data.bottles.map(b=>({...b}));
+        cocktails=data.cocktails||[];
+        tastings=data.tastings||[];
+        for(const b of bottles){if(b.photo)await dbSavePhoto(b.id,b.photo);}
+      }
+      saveB();saveC();saveT();renderBottles();
+      showBackupStatus(`Import réussi — ${bottles.length} bouteilles !`,'ok');
+    }catch(err){showBackupStatus('Erreur : '+err.message,'error');}
+  };
+  reader.readAsText(file);
+}
+function showBackupStatus(msg,type){
+  const el=document.getElementById('backup-status');
+  el.style.display='block';
+  el.style.cssText+=`;border-left:3px solid ${type==='ok'?'var(--green)':'var(--red)'};background:${type==='ok'?'rgba(58,107,74,.1)':'rgba(139,58,58,.1)'};color:${type==='ok'?'var(--green)':'var(--red)'}`;
+  el.textContent=(type==='ok'?'✦ ':'✕ ')+msg;
 }
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
+</html>
