@@ -412,40 +412,82 @@ function openBackup(){
   openModal('backup-modal');
 }
 
-function exportData(){
-  const data={
-    version:1,
-    date:new Date().toISOString(),
-    bottles, cocktails, tastings
-  };
+async function exportData(){
+  const photos = await loadAllPhotos();
+  const bottlesWithPhotos = bottles.map(b=>({...b, photo: photos[b.id]||b.photo||null}));
+  const data={version:2,date:new Date().toISOString(),bottles:bottlesWithPhotos,cocktails,tastings};
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   const dateStr=new Date().toISOString().slice(0,10);
-  a.href=url;
-  a.download=`monbar-sauvegarde-${dateStr}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.href=url; a.download=`monbar-sauvegarde-${dateStr}.json`;
+  a.click(); URL.revokeObjectURL(url);
   showBackupStatus('Sauvegarde téléchargée !','ok');
 }
 
 function importData(e){
   const file=e.target.files[0]; if(!file)return;
   const reader=new FileReader();
-  reader.onload=ev=>{
+  reader.onload=async ev=>{
     try{
       const data=JSON.parse(ev.target.result);
       if(!data.bottles||!data.cocktails) throw new Error('Fichier invalide');
-      if(!confirm(`Importer ${data.bottles.length} bouteilles, ${data.cocktails.length} cocktails et ${(data.tastings||[]).length} notes ?\n\nCela remplacera toutes tes données actuelles.`)) return;
-      bottles  = data.bottles  || [];
-      cocktails= data.cocktails|| [];
-      tastings = data.tastings || [];
-      saveB(); saveC(); saveT();
-      renderBottles();
-      showBackupStatus(`Import réussi — ${bottles.length} bouteilles restaurées !`,'ok');
+
+      // Choix du mode d'import
+      const mode = confirm(
+        `Sauvegarde : ${data.bottles.length} bouteilles\nActuel : ${bottles.length} bouteilles\n\n` +
+        `OK → Fusionner (remplace les bouteilles sans photo par celles de la sauvegarde)\n` +
+        `Annuler → Remplacer tout`
+      );
+
+      if(mode){
+        // ── Mode fusion ──
+        const photosDB = await loadAllPhotos();
+        for(const imported of data.bottles){
+          const existingIdx = bottles.findIndex(b=>b.id===imported.id || b.name.toLowerCase()===imported.name.toLowerCase());
+          if(existingIdx>=0){
+            const existing = bottles[existingIdx];
+            const hasPhoto = photosDB[existing.id] || existing.photo;
+            if(!hasPhoto){
+              // Remplace la bouteille existante (sans photo) par celle de la sauvegarde
+              bottles[existingIdx] = {...imported};
+              if(imported.photo) await savePhoto(imported.id, imported.photo);
+            }
+            // Si elle a déjà une photo → on garde l'existante, on ne touche pas
+          } else {
+            // Nouvelle bouteille absente du stock actuel → on l'ajoute
+            bottles.push({...imported});
+            if(imported.photo) await savePhoto(imported.id, imported.photo);
+          }
+        }
+        // Cocktails et notes : on ajoute ceux qui n'existent pas déjà
+        for(const c of (data.cocktails||[])){
+          if(!cocktails.find(x=>x.id===c.id)) cocktails.push(c);
+        }
+        for(const t of (data.tastings||[])){
+          if(!tastings.find(x=>x.id===t.id)) tastings.push(t);
+        }
+        saveB(); saveC(); saveT();
+        renderBottles();
+        showBackupStatus(`Fusion réussie — ${bottles.length} bouteilles au total !`,'ok');
+
+      } else {
+        // ── Mode remplacement total ──
+        if(!confirm('Remplacer TOUTES les données actuelles ?')) return;
+        bottles  = data.bottles.map(b=>({...b}));
+        cocktails= data.cocktails||[];
+        tastings = data.tastings||[];
+        for(const b of bottles){
+          if(b.photo){ await savePhoto(b.id, b.photo); }
+        }
+        saveB(); saveC(); saveT();
+        renderBottles();
+        showBackupStatus(`Import réussi — ${bottles.length} bouteilles restaurées !`,'ok');
+      }
     }catch(err){
-      showBackupStatus('Erreur : fichier invalide','error');
+      console.error(err);
+      showBackupStatus('Erreur : '+err.message,'error');
     }
   };
   reader.readAsText(file);
@@ -474,20 +516,86 @@ function saveConfig(){
   document.getElementById('cfg-section').style.display=CFG.apikey?'none':'block';
 }
 
+// ── IndexedDB pour les photos ─────────────────────────
+let _db = null;
+
+function initDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open('monbar_photos', 1);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore('photos', {keyPath:'id'});
+    };
+    req.onsuccess = e => { _db = e.target.result; resolve(); };
+    req.onerror   = e => { console.error('IndexedDB error', e); resolve(); }; // on continue même si ça échoue
+  });
+}
+
+function savePhoto(bottleId, dataUrl){
+  if(!_db || !dataUrl) return Promise.resolve();
+  return new Promise((resolve)=>{
+    const tx = _db.transaction('photos','readwrite');
+    tx.objectStore('photos').put({id:bottleId, data:dataUrl});
+    tx.oncomplete = resolve;
+    tx.onerror    = resolve;
+  });
+}
+
+function deletePhoto(bottleId){
+  if(!_db) return Promise.resolve();
+  return new Promise((resolve)=>{
+    const tx = _db.transaction('photos','readwrite');
+    tx.objectStore('photos').delete(bottleId);
+    tx.oncomplete = resolve;
+    tx.onerror    = resolve;
+  });
+}
+
+function loadPhoto(bottleId){
+  if(!_db) return Promise.resolve(null);
+  return new Promise((resolve)=>{
+    const tx  = _db.transaction('photos','readonly');
+    const req = tx.objectStore('photos').get(bottleId);
+    req.onsuccess = e => resolve(e.target.result?.data || null);
+    req.onerror   = ()=> resolve(null);
+  });
+}
+
+function loadAllPhotos(){
+  if(!_db) return Promise.resolve({});
+  return new Promise((resolve)=>{
+    const tx  = _db.transaction('photos','readonly');
+    const req = tx.objectStore('photos').getAll();
+    req.onsuccess = e => {
+      const map = {};
+      (e.target.result||[]).forEach(p => map[p.id]=p.data);
+      resolve(map);
+    };
+    req.onerror = ()=> resolve({});
+  });
+}
+
 // ── Data ──────────────────────────────────────────────
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-function load(){
+
+async function load(){
+  await initDB();
   try{bottles=JSON.parse(localStorage.getItem(LS.B))||[];}catch{bottles=[];}
   try{cocktails=JSON.parse(localStorage.getItem(LS.C))||[];}catch{cocktails=[];}
   try{tastings=JSON.parse(localStorage.getItem(LS.T))||[];}catch{tastings=[];}
+
+  // Charge les photos depuis IndexedDB
+  const photos = await loadAllPhotos();
+  bottles.forEach(b=>{ if(photos[b.id]) b.photo=photos[b.id]; });
+
   if(!bottles.length)   seedBottles();
   if(!cocktails.length) seedCocktails();
 }
+
 function saveB(){
-  try{ localStorage.setItem(LS.B,JSON.stringify(bottles)); }
-  catch(e){
-    alert('⚠️ Stockage plein ! Supprime des photos de bouteilles pour libérer de l\'espace (via Modifier → supprimer la photo).');
-  }
+  // Sauvegarde sans les photos dans localStorage (photos → IndexedDB)
+  const bottlesNoPhoto = bottles.map(b=>({...b, photo:null}));
+  try{ localStorage.setItem(LS.B, JSON.stringify(bottlesNoPhoto)); }
+  catch(e){ alert('⚠️ Erreur de sauvegarde : '+e.message); }
 }
 function saveC(){ localStorage.setItem(LS.C,JSON.stringify(cocktails)); }
 function saveT(){ localStorage.setItem(LS.T,JSON.stringify(tastings)); }
@@ -686,11 +794,12 @@ function resetBottleForm(){
   document.getElementById('bm-stars')._setVal(0);
   _photo=null; clearPhoto();
 }
-function saveBottle(){
+async function saveBottle(){
   const name=document.getElementById('bm-name').value.trim(); if(!name){document.getElementById('bm-name').focus();return;}
-  const id=document.getElementById('bm-id').value;
+  const id=document.getElementById('bm-id').value||uid();
   const existPhoto=id?(bottles.find(x=>x.id===id)||{}).photo:null;
-  const obj={id:id||uid(),name,
+  const photoToUse = _photo!==null ? _photo : existPhoto;
+  const obj={id,name,
     cat:document.getElementById('bm-cat').value,
     emoji:document.getElementById('bm-emoji').value.trim(),
     qty:parseFloat(document.getElementById('bm-qty').value)||0,
@@ -701,12 +810,21 @@ function saveBottle(){
     bottles:parseInt(document.getElementById('bm-bottles').value)||null,
     stars:document.getElementById('bm-stars')._getVal(),
     note:document.getElementById('bm-note').value.trim(),
-    photo:_photo!==null?_photo:existPhoto};
-  if(id){const i=bottles.findIndex(x=>x.id===id);if(i>=0)bottles[i]=obj;}else bottles.push(obj);
-  saveB();closeModal('bottle-modal');renderBottles();
+    photo: photoToUse // gardé en mémoire pour l'affichage
+  };
+  const editId=document.getElementById('bm-id').value;
+  if(editId){const i=bottles.findIndex(x=>x.id===editId);if(i>=0)bottles[i]=obj;}else bottles.push(obj);
+
+  // Photo → IndexedDB, reste → localStorage
+  if(photoToUse) await savePhoto(obj.id, photoToUse);
+  else if(_photo===null && editId) await deletePhoto(editId); // photo supprimée
+  saveB();
+  closeModal('bottle-modal');renderBottles();
 }
-function deleteBottle(){
-  bottles=bottles.filter(x=>x.id!==document.getElementById('bm-id').value);
+async function deleteBottle(){
+  const id=document.getElementById('bm-id').value;
+  bottles=bottles.filter(x=>x.id!==id);
+  await deletePhoto(id);
   saveB();closeModal('bottle-modal');renderBottles();
 }
 function openBottleDetail(id){
@@ -886,11 +1004,12 @@ function adjStk(id,d){
 }
 
 // ── Init ──────────────────────────────────────────────
-load();
-loadConfig();
-initStarInput('bm-stars');
-initStarInput('tm-stars');
-renderBottles();
+load().then(()=>{
+  loadConfig();
+  initStarInput('bm-stars');
+  initStarInput('tm-stars');
+  renderBottles();
+});
 </script>
 <!-- MODAL RECETTE IA -->
 <div class="modal-overlay" id="ai-recipe-modal" onclick="closeOnBg(event,'ai-recipe-modal')">
